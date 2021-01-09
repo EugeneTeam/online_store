@@ -1,0 +1,7 @@
+# folder
+node_modules/
+.idea
+
+#file
+.env
+yarn.lock
