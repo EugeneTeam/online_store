@@ -62,7 +62,11 @@ module.exports = class User extends Model {
       },
       roleId: {
         allowNull: false,
-        type: DataType.INTEGER
+        type: DataType.STRING,
+        references: {
+          model: 'Roles',
+          key: 'nameId'
+        }
       },
       createdAt: {
         allowNull: false,
@@ -78,7 +82,9 @@ module.exports = class User extends Model {
   }
 
   static associate(models) {
-    // define association here
+    this.belongsTo(models.Role, {
+      foreignKey: 'roleId'
+    });
   }
 
   encodeToken() {

@@ -17,7 +17,12 @@ module.exports = class Permission extends Model {
   }
 
   static associate(models) {
-    // define association here
+    this.belongsToMany(models.Role, {
+      through: models.RolePermission,
+      foreignKey: 'permissionId'
+    });
+    this.hasMany(models.RolePermission, {
+      foreignKey: 'permissionId'
+    });
   }
-
 }

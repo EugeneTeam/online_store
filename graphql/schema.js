@@ -9,6 +9,7 @@ const typeDefs = `
         }
         type Query {
             authorization(email: String!, password: String!): String
+            test: String
         }
         type Mutation {
             registration(input: RegistrationInput): String

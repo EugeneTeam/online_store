@@ -9,6 +9,46 @@ module.exports = class User {
         const gqlOptimizer = new GqlOptimizer('User', models);
         return {
             Query: {
+                //TODO FOR TESTING ROUTE
+                test: async (obj, arg) => {
+                    const result = await models.Product.findOne({
+                        where: {
+                            id: 1
+                        },
+                        include: {
+                            model: models.FeatureProduct,
+                            include: [
+                                models.Characteristic,
+                                models.Value
+                            ]
+                        }
+                    })
+                    console.log(result.name)
+                    for (const q of result.FeatureProducts) {
+                        console.log('=====================================')
+                        console.log(`${q.Characteristic.name}=${q.Value.value}`)
+                    }
+                  // const result = await models.Category.findOne({
+                  //     where: {
+                  //         id: 1
+                  //     },
+                  //     include: {
+                  //         model: models.Characteristic,
+                  //         include: {
+                  //             model: models.Value
+                  //         }
+                  //     }
+                  // });
+                  // console.log(result.name)
+                  // for (const e of result.Characteristics) {
+                  //     console.log('+'+e.name)
+                  //     for (const r of e.Values) {
+                  //         console.log('|')
+                  //         console.log('+-'+r.value)
+                  //     }
+                  // }
+                  return 'SUCCESS';
+                },
                 authorization: async (obj, args) => {
                     const {password, email} = gqlOptimizer.checkRequiredFields(args, [
                         'password', 'email'

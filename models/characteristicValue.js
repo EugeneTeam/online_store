@@ -1,19 +1,19 @@
 'use strict';
 const {Model} = require('sequelize');
 
-module.exports = class RolePermission extends Model {
+module.exports = class CharacteristicValue extends Model {
   static init(sequelize, DataType) {
     return super.init({
-      permissionId: {
+      characteristicId: {
         allowNull: false,
         primaryKey: true,
-        type: DataType.STRING,
+        type: DataType.INTEGER,
         onDelete: 'CASCADE'
       },
-      roleId: {
+      valueId: {
         allowNull: false,
         primaryKey: true,
-        type: DataType.STRING,
+        type: DataType.INTEGER,
         onDelete: 'CASCADE'
       },
     }, {
@@ -23,11 +23,11 @@ module.exports = class RolePermission extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Role, {
-      foreignKey: 'roleId'
+    this.belongsTo(models.Characteristic, {
+      foreignKey: 'characteristicId'
     });
-    this.belongsTo(models.Permission, {
-      foreignKey: 'permissionId'
+    this.belongsTo(models.Value, {
+      foreignKey: 'valueId'
     });
   }
 }

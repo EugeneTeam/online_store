@@ -1,7 +1,7 @@
-# folder
+# folders
 node_modules/
 .idea
 
-#file
+# files
 .env
 yarn.lock
