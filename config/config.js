@@ -9,7 +9,7 @@ module.exports = {
     dialect: 'mysql',
     operatorsAliases: 0,
     seederStorage: 'sequelize',
-    logging: true,
+    logging: true
   },
   test: {
     username: 'root',

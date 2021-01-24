@@ -1,5 +1,6 @@
 'use strict';
 const {Model} = require('sequelize');
+const {float} = require('../validation/duplicateValidations');
 
 module.exports = class Discount extends Model {
   static init(sequelize, DataType) {
@@ -16,7 +17,8 @@ module.exports = class Discount extends Model {
       },
       discount: {
         allowNull: false,
-        type: DataType.FLOAT
+        type: DataType.FLOAT,
+        validate: float
       },
       expiredAt: {
         allowNull: false,
@@ -39,8 +41,5 @@ module.exports = class Discount extends Model {
     this.hasMany(models.Product, {
       foreignKey: 'discountId'
     });
-    this.hasMany(models.OfferType, {
-      foreignKey: 'discountId'
-    })
   }
 }

@@ -8,7 +8,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Images'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       galleryId: {
         allowNull: false,
@@ -16,7 +17,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Galleries'
-        }
+        },
+        onDelete: 'CASCADE'
       },
     });
   },

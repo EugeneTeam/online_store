@@ -1,7 +1,7 @@
 'use strict';
-const {Model} = require('sequelize');
+const {CRUDOptimisation} = require('../utils/CRUDOptimization');
 
-module.exports = class Image extends Model {
+module.exports = class Image extends CRUDOptimisation {
   static init(sequelize, DataType) {
     return super.init({
       id: {
@@ -10,7 +10,7 @@ module.exports = class Image extends Model {
         primaryKey: true,
         type: DataType.INTEGER
       },
-      urt: {
+      url: {
         allowNull: false,
         type: DataType.STRING
       },

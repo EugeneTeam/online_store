@@ -1,18 +1,27 @@
 'use strict';
-const {Model} = require('sequelize');
+const {CRUDOptimisation} = require('../utils/CRUDOptimization');
+const models = require('../models');
+const {string} = require('../validation/duplicateValidations');
 
-module.exports = class Role extends Model {
+module.exports = class Role extends CRUDOptimisation {
   static init(sequelize, DataType) {
     return super.init({
-      nameId: {
+      id: {
         allowNull: false,
         primaryKey: true,
+        autoIncrement: true,
+        type: DataType.INTEGER,
+      },
+      name: {
+        allowNull: false,
+        unique: true,
         type: DataType.STRING,
-        unique: true
+        validate: string
       }
     }, {
       sequelize,
-      timestamps: false
+      timestamps: false,
+      models
     })
   }
 
@@ -24,7 +33,7 @@ module.exports = class Role extends Model {
     this.hasMany(models.RolePermission, {
       foreignKey: 'roleId'
     });
-    this.hasMany(models.User, {
+    this.hasOne(models.User, {
       foreignKey: 'roleId'
     });
   }

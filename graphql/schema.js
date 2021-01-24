@@ -1,37 +1,27 @@
 const {ApolloServer, gql} = require('apollo-server-express')
 const _ = require('lodash');
-const User = require('./types/user')
+const {checkPermission, checkAuthorization, getMethodName} = require('../permission/checkPermission');
 
+const {resolvers, typeDefs} = require('./types')
 
-const typeDefs = `
-        ${
-            User.typeDefs()
-        }
-        type Query {
-            authorization(email: String!, password: String!): String
-            test: String
-        }
-        type Mutation {
-            registration(input: RegistrationInput): String
-        }
-`;
-
-function combineTypeDefs() {
-    return gql`${typeDefs}`;
-}
-
-function combineResolvers() {
-    return (
-        _.merge(
-            User.resolver()
-        )
-    )
-}
 module.exports = new ApolloServer({
-    typeDefs: combineTypeDefs(),
-    resolvers: combineResolvers(),
+    typeDefs: typeDefs,
+    resolvers: resolvers,
     formatError: error => error,
     context: async ({req, res}) => {
-
+        const method = getMethodName(req.body.query);
+        let context = {
+            user: null
+        }
+        // if (method !== 'authorization') {
+        //     //Проверка авторизации пользователя
+        //     context.user = await checkAuthorization(req);
+        //     //Проверка прав доступа к определенному методу
+        //     checkPermission(req.body.query, context.user);
+        // }
+        // return context;
     }
 })
+
+
+

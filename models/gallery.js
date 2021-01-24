@@ -1,7 +1,9 @@
 'use strict';
-const {Model} = require('sequelize');
+const {CRUDOptimisation} = require('../utils/CRUDOptimization');
+const models = require('../models');
+const {string} = require('../validation/duplicateValidations');
 
-module.exports = class Gallery extends Model {
+module.exports = class Gallery extends CRUDOptimisation {
   static init(sequelize, DataType) {
     return super.init({
       id: {
@@ -12,14 +14,9 @@ module.exports = class Gallery extends Model {
       },
       name: {
         allowNull: false,
-        type: DataType.STRING
-      },
-      productId: {
-        allowNull: false,
-        type: DataType.INTEGER,
-        references: {
-          model: 'Products'
-        }
+        type: DataType.STRING,
+        unique: true,
+        validate: string
       },
       createdAt: {
         allowNull: false,
@@ -30,13 +27,14 @@ module.exports = class Gallery extends Model {
         type: DataType.DATE
       }
     }, {
-      sequelize
+      sequelize,
+      models
     })
   }
 
   static associate(models) {
-    this.belongsTo(models.Product, {
-      foreignKey: 'productId'
+    this.hasOne(models.Product, {
+      foreignKey: 'galleryId'
     });
     this.belongsToMany(models.Image, {
       through: models.ImageGallery,

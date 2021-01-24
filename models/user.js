@@ -1,13 +1,13 @@
 'use strict';
 require('dotenv').config();
-const {Model} = require('sequelize');
-const {SALT_ROUNDS, AUTH_TOKEN_SIZE} = require('../config/constans');
+const {CRUDOptimisation} = require('../utils/CRUDOptimization');
+const {SALT_ROUNDS, AUTH_TOKEN_SIZE} = require('../config/constants');
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const randToken = require('rand-token');
 const moment = require('moment');
 
-module.exports = class User extends Model {
+module.exports = class User extends CRUDOptimisation {
   static init(sequelize, DataType) {
     return super.init({
       id: {
@@ -19,31 +19,19 @@ module.exports = class User extends Model {
       firstName: {
         allowNull: false,
         type: DataType.STRING,
-        validate: {
-          isAlpha: true
-        }
       },
       lastName: {
         allowNull: false,
-        type: DataType.STRING,
-        validate: {
-          isAlpha: true
-        }
+        type: DataType.STRING
       },
       phone: {
         allowNull: false,
         type: DataType.STRING,
-        validate: {
-          is: /^[0-9]{10,12}$/g
-        },
         unique: true
       },
       email: {
         allowNull: false,
         type: DataType.STRING,
-        validate: {
-          isEmail: true
-        },
         unique: true
       },
       status: {
@@ -65,7 +53,6 @@ module.exports = class User extends Model {
         type: DataType.STRING,
         references: {
           model: 'Roles',
-          key: 'nameId'
         }
       },
       createdAt: {
@@ -98,10 +85,8 @@ module.exports = class User extends Model {
     return randToken.generate(AUTH_TOKEN_SIZE);
   }
 
-  generateAccessToken(authToken) {
-    const payload = {
-      authToken,
-    }
+  generateAccessToken() {
+    const payload = {authToken: this.authToken}
     const options = {expiresIn: '1d'}
     return jwt.sign(payload, process.env.JWT_SECRET, options)
   }

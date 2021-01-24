@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      urt: {
+      url: {
         allowNull: false,
         type: Sequelize.STRING
       },

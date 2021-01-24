@@ -1,62 +1,17 @@
 const {ApolloError} = require('apollo-server');
 const models = require('../../models');
-const {GqlOptimizer} = require('../../utils/gqlOptimizer');
 const {auth_error, invalid_credential} = require('../../config/errorList');
+const {checkFields} = require('../../utils/checkRequiredFields');
 
 module.exports = class User {
-
     static resolver() {
-        const gqlOptimizer = new GqlOptimizer('User', models);
         return {
             Query: {
-                //TODO FOR TESTING ROUTE
-                test: async (obj, arg) => {
-                    const result = await models.Product.findOne({
-                        where: {
-                            id: 1
-                        },
-                        include: {
-                            model: models.FeatureProduct,
-                            include: [
-                                models.Characteristic,
-                                models.Value
-                            ]
-                        }
-                    })
-                    console.log(result.name)
-                    for (const q of result.FeatureProducts) {
-                        console.log('=====================================')
-                        console.log(`${q.Characteristic.name}=${q.Value.value}`)
-                    }
-                  // const result = await models.Category.findOne({
-                  //     where: {
-                  //         id: 1
-                  //     },
-                  //     include: {
-                  //         model: models.Characteristic,
-                  //         include: {
-                  //             model: models.Value
-                  //         }
-                  //     }
-                  // });
-                  // console.log(result.name)
-                  // for (const e of result.Characteristics) {
-                  //     console.log('+'+e.name)
-                  //     for (const r of e.Values) {
-                  //         console.log('|')
-                  //         console.log('+-'+r.value)
-                  //     }
-                  // }
-                  return 'SUCCESS';
-                },
                 authorization: async (obj, args) => {
-                    const {password, email} = gqlOptimizer.checkRequiredFields(args, [
-                        'password', 'email'
-                    ]);
-
+                    checkFields(args, ['email', 'password']);
                     const isUserExists = await models.User.findOne({
                         where: {
-                            email
+                            email: args.email
                         }
                     });
 
@@ -64,7 +19,7 @@ module.exports = class User {
                         throw new ApolloError(auth_error.message, auth_error.code);
                     }
 
-                    return models.User.decryptPassword(password, isUserExists.passwordHash)
+                    return models.User.decryptPassword(args.password, isUserExists.passwordHash)
                         .then(async response => {
                             if (response) {
                                 return isUserExists.generateAccessToken()
@@ -79,27 +34,38 @@ module.exports = class User {
             },
             Mutation: {
                 registration: async (obj, {input}) => {
-                    const {password, firstName, lastName, email, phone} = gqlOptimizer.checkRequiredFields(input, [
-                        'password', 'firstName', 'lastName', 'email', 'phone'
-                    ]);
-                    const newUser = await gqlOptimizer.createItem({
-                        firstName,
-                        lastName,
-                        phone,
-                        email,
+                    checkFields(input, ['password', 'firstName', 'lastName', 'email', 'phone']);
+
+                    const newUser = await models.User.createItem({
+                        firstName: input.firstName,
+                        lastName: input.lastName,
+                        phone: input.phone,
+                        email: input.email,
                         roleId: 'customer',
                         status: 'INACTIVE',
-                        passwordHash: await models.User.encryptPassword(password),
+                        passwordHash: await models.User.encryptPassword(input.password),
                         authToken: await models.User.generateAuthToken(),
                     }, [
-                        {where: {email: input.email}, errorMessage: 'Email is used', failureIfExists: true},
-                        {where: {phone: input.phone}, errorMessage: 'Phone is used', failureIfExists: true}
+                        {identifier:{where: {email: input.email}}, message: 'Email is used', failureIfExists: true},
+                        {identifier:{where: {phone: input.phone}}, message: 'Phone is used', failureIfExists: true}
                     ]);
                     return newUser.encodeToken();
                 }
 
             }
         }
+    }
+
+    static queryTypeDefs() {
+        return `
+            authorization(email: String!, password: String!): String
+        `;
+    }
+
+    static mutationTypeDefs() {
+        return `
+            registration(input: RegistrationInput): String
+        `;
     }
 
     static typeDefs() {
@@ -123,6 +89,6 @@ module.exports = class User {
                 firstName: String!
                 lastName: String!
             }
-        `
+        `;
     }
 }

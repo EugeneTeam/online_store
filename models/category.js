@@ -1,12 +1,14 @@
 'use strict';
 const {Model} = require('sequelize');
+const {string} = require('../validation/duplicateValidations');
 
 module.exports = class Category extends Model {
   static init(sequelize, DataType) {
     return super.init({
       name: {
         allowNull: false,
-        type: DataType.STRING
+        type: DataType.STRING,
+        validate: string
       },
       createdAt: {
         allowNull: false,

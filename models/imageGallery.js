@@ -1,7 +1,7 @@
 'use strict';
-const {Model} = require('sequelize');
+const {CRUDOptimisation} = require('../utils/CRUDOptimization');
 
-module.exports = class ImageGallery extends Model {
+module.exports = class ImageGallery extends CRUDOptimisation {
   static init(sequelize, DataType) {
     return super.init({
       imageId: {
@@ -10,7 +10,8 @@ module.exports = class ImageGallery extends Model {
         type: DataType.INTEGER,
         references: {
           model: 'Images'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       galleryId: {
         allowNull: false,
@@ -18,7 +19,8 @@ module.exports = class ImageGallery extends Model {
         type: DataType.INTEGER,
         references: {
           model: 'Galleries'
-        }
+        },
+        onDelete: 'CASCADE'
       },
     }, {
       sequelize,
@@ -28,10 +30,12 @@ module.exports = class ImageGallery extends Model {
 
   static associate(models) {
     this.belongsTo(models.Image, {
-      foreignKey: 'imageId'
+      foreignKey: 'imageId',
+      onDelete: 'CASCADE'
     });
     this.belongsTo(models.Gallery, {
-      foreignKey: 'galleryId'
+      foreignKey: 'galleryId',
+      onDelete: 'CASCADE'
     });
   }
 }

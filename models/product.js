@@ -30,12 +30,6 @@ module.exports = class Product extends Model {
         allowNull: false,
         type: DataType.FLOAT,
       },
-      offerId: {
-        type: DataType.INTEGER,
-        references: {
-          model: 'Offers'
-        }
-      },
       discountId: {
         type: DataType.INTEGER,
         references: {
@@ -77,22 +71,9 @@ module.exports = class Product extends Model {
     this.belongsTo(models.Discount, {
       foreignKey: 'discountId'
     });
-    this.belongsTo(models.Offer, {
-      foreignKey: 'offerId'
-    });
+
     this.belongsTo(models.Category, {
       foreignKey: 'categoryId'
-    });
-    this.hasMany(models.OfferType, {
-      foreignKey: 'productId',
-      as: 'mainProduct'
-    });
-    this.hasMany(models.OfferType, {
-      foreignKey: 'productIdOnOffer',
-      as: 'secondaryProduct'
-    });
-    this.hasMany(models.Gallery, {
-      foreignKey: 'productId'
     });
   }
 }

@@ -1,45 +1,50 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('OfferTypes', {
+    await queryInterface.createTable('Products', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      type: {
+      name: {
         allowNull: false,
-        type: Sequelize.ENUM(
-            'PLUS_SOME',
-            'FREE',
-            'MORE',
-            'EVERY',
-            'OTHER_PRODUCT'
-            )
+        type: Sequelize.STRING
       },
-      // for PLUS_SOME
-      count: Sequelize.INTEGER,
-      productId: {
+      categoryId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'Products'
-        }
+          model: 'Categories'
+        },
+        onDelete: 'CASCADE'
       },
-      // for FREE, OTHER_PRODUCT
-      productIdOnOffer: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Products'
-        }
+      description: {
+        allowNull: false,
+        type: Sequelize.TEXT,
       },
-      //for MORE, EVERY, OTHER_PRODUCT
+      price: {
+        allowNull: false,
+        type: Sequelize.FLOAT,
+      },
       discountId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Discounts'
         }
+      },
+      galleryId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Galleries'
+        }
+      },
+      rating: {
+        allowNull: false,
+        type: Sequelize.FLOAT,
+        defaultValue: 0
       },
       createdAt: {
         allowNull: false,
@@ -54,6 +59,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('OfferTypes');
+    await queryInterface.dropTable('Products');
   }
 };

@@ -9,7 +9,7 @@ module.exports = {
         lastName: 'Admin',
         phone: '0123456789',
         email: 'some@email.com',
-        roleId: 'admin',
+        roleId: 1,
         status: 'INACTIVE',
         passwordHash: await models.User.encryptPassword(process.env.DEFAULT_PASSWORD_FOR_ADMIN),
         authToken: await models.User.generateAuthToken(),

@@ -11,31 +11,19 @@ module.exports = {
       firstName: {
         allowNull: false,
         type: Sequelize.STRING,
-        validate: {
-          isAlpha: true
-        }
       },
       lastName: {
         allowNull: false,
         type: Sequelize.STRING,
-        validate: {
-          isAlpha: true
-        }
       },
       phone: {
         allowNull: false,
         type: Sequelize.STRING,
-        validate: {
-          is: /^[0-9]{10,12}$/g
-        },
         unique: true
       },
       email: {
         allowNull: false,
         type: Sequelize.STRING,
-        validate: {
-          isEmail: true
-        },
         unique: true
       },
       status: {
@@ -54,10 +42,10 @@ module.exports = {
       },
       roleId: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         references: {
           model: 'Roles',
-          key: 'nameId'
+          key: 'id'
         }
       },
       createdAt: {

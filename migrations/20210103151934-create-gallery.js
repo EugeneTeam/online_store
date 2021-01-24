@@ -10,14 +10,8 @@ module.exports = {
       },
       name: {
         allowNull: false,
+        unique: true,
         type: Sequelize.STRING
-      },
-      productId: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Products'
-        }
       },
       createdAt: {
         allowNull: false,
