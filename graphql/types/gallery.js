@@ -22,6 +22,9 @@ module.exports = class Gallery {
                     });
                 }
             },
+            Gallery: {
+              images: gallery => gallery.getImages()
+            },
             Mutation: {
                 createGallery: async (obj, args) => {
                     return models.Gallery.createItem({
@@ -91,6 +94,7 @@ module.exports = class Gallery {
                 name: String
                 createdAt: String
                 updatedAt: String
+                images: [Image]
             }
             type GalleryList{
                 count: Int,

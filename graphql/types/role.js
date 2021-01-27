@@ -18,6 +18,9 @@ module.exports = class Role {
                     return  models.Role.findItem({options: args.roleId, error: true});
                 }
             },
+            Role: {
+                permissions: (role) => role.getPermissions()
+            },
             Mutation: {
                 createRole: async (obj, args) => {
                     return models.Role.createItem({
@@ -55,6 +58,7 @@ module.exports = class Role {
             type Role {
                 id: Int
                 name: String
+                permissions: [Permission]
             }
             
             type RoleList {
