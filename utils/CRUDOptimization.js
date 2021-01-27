@@ -102,7 +102,7 @@ class CRUDOptimisation extends Model {
                     for (const {options, table, error, message} of dependency) {
                         const item = await this.findItem({options});
                         if (error && item) {
-                            reject(new ApolloError(message ? message : `${table || this.name} is exists`, '400'));
+                            reject(new ApolloError(message ? message : `${table || this.name} id:${item.id} is exists`, '400'));
                         }
 
                         if (!error && !item) {
