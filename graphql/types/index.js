@@ -17,10 +17,18 @@ fs
     })
     .forEach(file => {
         const module = require(path.join(__dirname, file));
-        resolvers.push(module.resolver());
-        typeDefs.push(module.typeDefs())
-        mutationTypeDefs.push(module.mutationTypeDefs())
-        queryTypeDefs.push(module.queryTypeDefs())
+        if (module.resolver() !== undefined) {
+            resolvers.push(module.resolver());
+        }
+        if (module.resolver() !== undefined) {
+            typeDefs.push(module.typeDefs())
+        }
+        if (module.resolver() !== undefined) {
+            mutationTypeDefs.push(module.mutationTypeDefs())
+        }
+        if (module.resolver() !== undefined) {
+            queryTypeDefs.push(module.queryTypeDefs())
+        }
     });
 
 module.exports = {
