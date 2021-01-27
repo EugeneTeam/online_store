@@ -1,7 +1,8 @@
 'use strict';
-const {Model} = require('sequelize');
+const {CRUDOptimisation} = require('../utils/CRUDOptimization');
+const {string} = require('../validation/duplicateValidations');
 
-module.exports = class Permission extends Model {
+module.exports = class Permission extends CRUDOptimisation {
   static init(sequelize, DataType) {
     return super.init({
       id: {
@@ -15,7 +16,7 @@ module.exports = class Permission extends Model {
         unique: true,
         type: DataType.STRING,
         validate: {
-          is: /&[a-zA-Z ]{3,15}$/g
+          is: string
         }
       }
     }, {

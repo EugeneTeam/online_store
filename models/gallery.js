@@ -1,6 +1,5 @@
 'use strict';
 const {CRUDOptimisation} = require('../utils/CRUDOptimization');
-const models = require('../models');
 const {string} = require('../validation/duplicateValidations');
 
 module.exports = class Gallery extends CRUDOptimisation {
@@ -27,8 +26,7 @@ module.exports = class Gallery extends CRUDOptimisation {
         type: DataType.DATE
       }
     }, {
-      sequelize,
-      models
+      sequelize
     })
   }
 

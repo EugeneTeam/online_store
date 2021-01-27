@@ -7,7 +7,7 @@ module.exports = class Image {
         return {
             Query: {
                 getImageById: async(obj, args) => {
-                    return models.Image.findItem({options: args.imageId})
+                    return models.Image.findItem({options: args.imageId, error: true})
                 },
                 getImageList: async(obj, args) => {
                     return models.Image.findItem({
@@ -47,6 +47,7 @@ module.exports = class Image {
                             url: args.url,
                             title: args.title || null,
                             alt: args.alt || null,
+                            updatedAt: new Date()
                         },
                         dependency: [{
                             options: {

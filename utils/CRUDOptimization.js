@@ -8,7 +8,6 @@ class CRUDOptimisation extends Model {
     }
 
     static returnMethodByValueType(value, allInsteadOfOne, count) {
-
         if (typeof value === 'object') {
             if (count) {
                 return 'findAndCountAll'

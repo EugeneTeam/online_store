@@ -1,6 +1,5 @@
 'use strict';
 const {CRUDOptimisation} = require('../utils/CRUDOptimization');
-const models = require('../models');
 const {string} = require('../validation/duplicateValidations');
 
 module.exports = class Role extends CRUDOptimisation {
@@ -20,8 +19,7 @@ module.exports = class Role extends CRUDOptimisation {
       }
     }, {
       sequelize,
-      timestamps: false,
-      models
+      timestamps: false
     })
   }
 
