@@ -19,6 +19,9 @@ module.exports = class Category {
                     })
                 }
             },
+            Category: {
+                characteristics: category => category.getCharacteristics(),
+            },
             Mutation: {
                 createCategory: async(obj, args) => {
                     return models.Category.createItem({
@@ -80,6 +83,7 @@ module.exports = class Category {
                 name: String
                 createdAt: String
                 updatedAt: String
+                characteristics: [Characteristic]
            }
            
            type CategoryList {

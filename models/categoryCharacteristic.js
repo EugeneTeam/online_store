@@ -1,7 +1,7 @@
 'use strict';
-const {Model} = require('sequelize');
+const {CRUDOptimisation} = require('../utils/CRUDOptimization');
 
-module.exports = class CategoryCharacteristic extends Model {
+module.exports = class CategoryCharacteristic extends CRUDOptimisation {
   static init(sequelize, DataType) {
     return super.init({
       categoryId: {
