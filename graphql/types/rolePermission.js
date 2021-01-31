@@ -10,7 +10,10 @@ module.exports = class RolePermission {
                             permissionId: args.permissionId,
                             roleId: args.roleId,
                         },
-                        dependency: [{
+                        dependency: [
+                            {options: args.roleId, table: 'Role'},
+                            {options: args.permissionId, table: 'Permission'},
+                            {
                             options: {
                                 where: {
                                     permissionId: args.permissionId,
@@ -33,7 +36,10 @@ module.exports = class RolePermission {
                                         roleId: args.roleId,
                                     },
                                     transaction,
-                                    dependency: [{
+                                    dependency: [
+                                        {options: args.roleId, table: 'Role'},
+                                        {options: args.permissionId, table: 'Permission'},
+                                        {
                                         options: {
                                             where: {
                                                 permissionId: id,
