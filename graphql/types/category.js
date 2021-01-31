@@ -2,15 +2,15 @@ const models = require('../../models');
 const {PAGINATION} = require('../../config/constants');
 const {Op} = require('sequelize');
 
-module.exports = class Characteristic {
+module.exports = class Category {
     static resolver() {
         return {
             Query: {
-                getCharacteristicById: async(obj, args) => {
-                    return models.Characteristic.findItem({options: args.characteristicId, error: true})
+                getCategoryById: async(obj, args) => {
+                    return models.Category.findItem({options: args.categoryId, error: true})
                 },
-                getCharacteristicList: async(obj, args) => {
-                    return models.Characteristic.findItem({
+                getCategoryList: async(obj, args) => {
+                    return models.Category.findItem({
                         options: {
                             limit: args.limit || PAGINATION.DEFAULT_LIMIT,
                             offset: args.offset || PAGINATION.DEFAULT_OFFSET
@@ -20,8 +20,8 @@ module.exports = class Characteristic {
                 }
             },
             Mutation: {
-                createCharacteristic: async(obj, args) => {
-                    return models.Characteristic.createItem({
+                createCategory: async(obj, args) => {
+                    return models.Category.createItem({
                         item: {
                             name: args.name,
                             createdAt: new Date(),
@@ -32,19 +32,19 @@ module.exports = class Characteristic {
                                 where: {name: args.name}
                             },
                             error: true,
-                            message: `Characteristic "${args.name}" is exists`
+                            message: `Category "${args.name}" is exists`
                         }]
                     })
                 },
-                updateCharacteristic: async(obj, args) => {
-                    return models.Characteristic.updateItem({
-                        options: args.characteristicId,
+                updateCategory: async(obj, args) => {
+                    return models.Category.updateItem({
+                        options: args.categoryId,
                         updatedItem: {
                             name: args.name,
                             updatedAt: new Date()
                         },
                         dependency: [
-                            {options: args.characteristicId},
+                            {options: args.categoryId},
                             {
                                 options: {
                                     where: {name: args.name}
@@ -55,16 +55,16 @@ module.exports = class Characteristic {
                         ]
                     })
                 },
-                removeCharacteristic: async(obj, args) => {
-                    return models.Characteristic.removeItem({
-                        options: args.characteristicId
+                removeCategory: async(obj, args) => {
+                    return models.Category.removeItem({
+                        options: args.categoryId
                     })
                 },
-                bulkDeleteCharacteristic: async(obj, args) => {
-                    return models.Characteristic.destroy({
+                bulkDeleteCategory: async(obj, args) => {
+                    return models.Category.destroy({
                         where: {
                             id: {
-                                [Op.in]: args.characteristicIds
+                                [Op.in]: args.categoryIds
                             }
                         }
                     });
@@ -75,32 +75,33 @@ module.exports = class Characteristic {
 
     static typeDefs() {
         return `
-           type Characteristic { 
+           type Category { 
                 id: Int
                 name: String
                 createdAt: String
                 updatedAt: String
            }
-           type CharacteristicList {
+           
+           type CategoryList {
                 count: Int
-                rows: [Characteristic]
+                rows: [Category]
            }
         `;
     }
 
     static mutationTypeDefs() {
         return `
-            createCharacteristic(name: String!): Characteristic
-            updateCharacteristic(characteristicId: Int!, name: String!): Characteristic
-            removeCharacteristic(characteristicId: Int!): String
-            bulkDeleteCharacteristic(characteristicIds: [Int]!): Int
+            createCategory(name: String!): Category
+            updateCategory(categoryId: Int!, name: String!): Category
+            removeCategory(categoryId: Int!): String
+            bulkDeleteCategory(categoryIds: [Int]!): Int
         `;
     }
 
     static queryTypeDefs() {
         return `
-            getCharacteristicById(characteristicId: Int): Characteristic
-            getCharacteristicList(limit: Int, offset: Int): CharacteristicList
+            getCategoryById(categoryId: Int): Category
+            getCategoryList(limit: Int, offset: Int): CategoryList
         `;
     }
 }
