@@ -19,6 +19,9 @@ module.exports = class Characteristic {
                     })
                 }
             },
+            Characteristic:{
+              values: characteristic => characteristic.getValues(),
+            },
             Mutation: {
                 createCharacteristic: async(obj, args) => {
                     return models.Characteristic.createItem({
@@ -80,6 +83,7 @@ module.exports = class Characteristic {
                 name: String
                 createdAt: String
                 updatedAt: String
+                values: [Value]
            }
            type CharacteristicList {
                 count: Int
