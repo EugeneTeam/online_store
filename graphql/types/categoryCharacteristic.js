@@ -58,6 +58,7 @@ module.exports = class CategoryCharacteristic {
             }
         };
     }
+
     static mutationTypeDefs() {
         return `
             addCharacteristicForCategory(categoryId: Int!, characteristicId: Int!): Category

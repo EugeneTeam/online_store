@@ -33,22 +33,26 @@ module.exports = class User {
                 }
             },
             Mutation: {
-                registration: async (obj, {input}) => {
-                    checkFields(input, ['password', 'firstName', 'lastName', 'email', 'phone']);
-
+                registration: async (obj, args) => {
+                    checkFields(args, ['password', 'firstName', 'lastName', 'email', 'phone']);
                     const newUser = await models.User.createItem({
-                        firstName: input.firstName,
-                        lastName: input.lastName,
-                        phone: input.phone,
-                        email: input.email,
-                        roleId: 'customer',
-                        status: 'INACTIVE',
-                        passwordHash: await models.User.encryptPassword(input.password),
-                        authToken: await models.User.generateAuthToken(),
-                    }, [
-                        {identifier:{where: {email: input.email}}, message: 'Email is used', failureIfExists: true},
-                        {identifier:{where: {phone: input.phone}}, message: 'Phone is used', failureIfExists: true}
-                    ]);
+                        item: {
+                            firstName: args.firstName,
+                            lastName: args.lastName,
+                            phone: args.phone,
+                            email: args.email,
+                            roleId: 1,
+                            status: 'INACTIVE',
+                            passwordHash: await models.User.encryptPassword(args.password),
+                            authToken: await models.User.generateAuthToken(),
+                            createdAt: new Date(),
+                            updatedAt: new Date()
+                        },
+                        dependency: [
+                            {options:{where: {email: args.email}}, message: 'Email is used', error: true},
+                            {options:{where: {phone: args.phone}}, message: 'Phone is used', error: true}
+                        ]
+                    });
                     return newUser.encodeToken();
                 }
 
@@ -64,7 +68,7 @@ module.exports = class User {
 
     static mutationTypeDefs() {
         return `
-            registration(input: RegistrationInput): String
+            registration(password: String!, email: String!, phone: String!, firstName: String!, lastName: String!): String
         `;
     }
 
@@ -80,14 +84,6 @@ module.exports = class User {
                 roleId: Int
                 createdAt: String
                 updatedAt: String
-            }
-            
-            input RegistrationInput {
-                password: String!
-                email: String!
-                phone: String!
-                firstName: String!
-                lastName: String!
             }
         `;
     }

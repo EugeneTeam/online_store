@@ -7,6 +7,7 @@ module.exports = class Category {
         return {
             Query: {
                 getCategoryById: async(obj, args) => {
+                    // error true - return error if category not found
                     return models.Category.findItem({options: args.categoryId, error: true})
                 },
                 getCategoryList: async(obj, args) => {
@@ -31,6 +32,7 @@ module.exports = class Category {
                             updatedAt: new Date()
                         },
                         dependency: [{
+                            // if the category exists return an error
                             options: {
                                 where: {name: args.name}
                             },
@@ -47,7 +49,9 @@ module.exports = class Category {
                             updatedAt: new Date()
                         },
                         dependency: [
+                            // if the updated category does not exist, return an error
                             {options: args.categoryId},
+                            // if the new category name exists, return an error
                             {
                                 options: {
                                     where: {name: args.name}
