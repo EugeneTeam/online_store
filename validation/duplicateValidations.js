@@ -9,14 +9,7 @@ const string = {
     }
 }
 
-const float = {
-    IsFloat: {
-        args: [true],
-        msg: 'Only integers and floating point numbers are allowed'
-    }
-}
 
 module.exports = {
-    string,
-    float
+    string
 }

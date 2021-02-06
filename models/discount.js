@@ -1,8 +1,7 @@
 'use strict';
-const {Model} = require('sequelize');
-const {float} = require('../validation/duplicateValidations');
+const {CRUDOptimisation} = require('../utils/CRUDOptimization');
 
-module.exports = class Discount extends Model {
+module.exports = class Discount extends CRUDOptimisation {
   static init(sequelize, DataType) {
     return super.init({
       id: {
@@ -18,7 +17,6 @@ module.exports = class Discount extends Model {
       discount: {
         allowNull: false,
         type: DataType.FLOAT,
-        validate: float
       },
       expiredAt: {
         allowNull: false,
