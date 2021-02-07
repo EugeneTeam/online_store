@@ -13,13 +13,11 @@ module.exports = new ApolloServer({
         let context = {
             user: null
         }
-        // if (method !== 'authorization') {
-        //     //Проверка авторизации пользователя
-        //     context.user = await checkAuthorization(req);
-        //     //Проверка прав доступа к определенному методу
-        //     checkPermission(req.body.query, context.user);
-        // }
-        // return context;
+        if (method !== 'authorization') {
+            context.user = await checkAuthorization(req);
+            checkPermission(req.body.query, context.user);
+        }
+        return context;
     }
 })
 

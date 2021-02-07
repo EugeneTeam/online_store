@@ -87,7 +87,7 @@ module.exports = class User extends CRUDOptimisation {
 
   generateAccessToken() {
     const payload = {authToken: this.authToken}
-    const options = {expiresIn: '1d'}
+    const options = {expiresIn: '7d'}
     return jwt.sign(payload, process.env.JWT_SECRET, options)
   }
 

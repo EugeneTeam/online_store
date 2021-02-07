@@ -6,7 +6,6 @@ const checkPermission = (query, user) => {
     const permissions = user.Role.Permissions.map(permission => permission.name);
     if (typeof query === 'string') {
         const methodName = getMethodName(query);
-
         if (methodName !== null && list[methodName] !== undefined) {
             if (list[methodName].permissions.length) {
                 let denied = false;
@@ -26,14 +25,15 @@ const checkPermission = (query, user) => {
 }
 
 const getMethodName = query => {
+
+    let temp = query.replace(/[\n]/g, '').replace(/[ ]/g, '');
+    let start = temp.indexOf('{');
+    let end = temp.indexOf('(');
     /**
      * IntrospectionQuery - это стандартный запрос gql который происходит
      * автоматически через определенный промежуток времени
      * В сочетание с типом запроса query получается строка queryIntrospectionQuery
-    */
-    let temp = query.replace(/[\n]/g, '').replace(/[ ]/g, '');
-    let start = temp.indexOf('{');
-    let end = temp.indexOf('(');
+     */
     if (temp.split('{')[0] === 'queryIntrospectionQuery') {
         return null;
     }
@@ -67,6 +67,7 @@ const checkAuthorization = async req => {
             return user;
         }
     }
+    throw new ApolloError('not authorized','401');
 }
 
 module.exports = {

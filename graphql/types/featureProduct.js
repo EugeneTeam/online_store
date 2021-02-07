@@ -1,8 +1,50 @@
 const models = require('../../models');
+const {PAGINATION} = require('../../config/constants');
 
 module.exports = class FeatureProduct {
     static resolver() {
         return {
+            Query: {
+              getFeatureProductByProductId: async (obj, args) => {
+                  return models.FeatureProduct.findItem({
+                      options: {
+                          where: {
+                              productId: args.productId
+                          }
+                      },
+                      error: true
+                  })
+              },
+              getFeatureProductByValueId: async (obj, args) => {
+                  return models.FeatureProduct.findItem({
+                      options: {
+                          where: {
+                              valueId: args.valueId
+                          }
+                      },
+                      error: true
+                  })
+              },
+              getFeatureProductByCharacteristicId: async (obj, args) => {
+                  return models.FeatureProduct.findItem({
+                      options: {
+                          where: {
+                              characteristicId: args.characteristicId
+                          }
+                      },
+                      error: true
+                  })
+              },
+              getFeatureProductList: async (obj, args) => {
+                  return models.FeatureProduct.findItem({
+                      options: {
+                          limit: args.limit || PAGINATION.DEFAULT_LIMIT,
+                          offset: args.offset || PAGINATION.DEFAULT_OFFSET
+                      },
+                      count: true
+                  })
+              },
+            },
             FeatureProduct: {
                 value: featureProduct => featureProduct.getValue(),
                 characteristic: featureProduct => featureProduct.getCharacteristic(),
@@ -132,11 +174,26 @@ module.exports = class FeatureProduct {
         return `
             type FeatureProduct {
                 productId: Int
+                characteristicId: Int
+                valueId: Int
                 createdAt: String
                 updatedAt: String
                 value: Value
                 characteristic: Characteristic
             }
+            type FeatureProductList {
+                count: Int
+                rows: [FeatureProduct]
+            }
+        `;
+    }
+
+    static queryTypeDefs() {
+        return `
+            getFeatureProductByProductId(productId: Int!): FeatureProduct
+            getFeatureProductByValueId(valueId: Int!): FeatureProduct
+            getFeatureProductByCharacteristicId(characteristicId: Int): FeatureProduct
+            getFeatureProductList(limit: Int, offset: Int): FeatureProductList
         `;
     }
 
