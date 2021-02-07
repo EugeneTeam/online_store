@@ -22,7 +22,7 @@ module.exports = class User {
                     return models.User.decryptPassword(args.password, isUserExists.passwordHash)
                         .then(async response => {
                             if (response) {
-                                return isUserExists.generateAccessToken()
+                                return isUserExists.generateAccessToken(args.rememberMe || false)
                             } else {
                                 throw new ApolloError(invalid_credential.message, invalid_credential.code);
                             }
@@ -62,7 +62,7 @@ module.exports = class User {
 
     static queryTypeDefs() {
         return `
-            authorization(email: String!, password: String!): String
+            authorization(email: String!, password: String!, rememberMe: Boolean): String
         `;
     }
 
