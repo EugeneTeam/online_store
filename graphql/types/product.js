@@ -1,21 +1,25 @@
 const models = require('../../models');
 const {PAGINATION} = require('../../config/constants');
+const {Op} = require('sequelize');
 
 module.exports = class Product {
     static resolver() {
         return {
             Query: {
                 getProductById: async(obj, args) => {
-                    return models.Product.findItem({options: args.productId, error: true})
+                    return models.Product.smartSearch({options: args.productId, error: true})
                 },
                 getProductList: async(obj, args) => {
-                    return models.Category.findItem({
+                    return models.Category.smartSearch({
                         options: {
                             limit: args.limit || PAGINATION.DEFAULT_LIMIT,
                             offset: args.offset || PAGINATION.DEFAULT_OFFSET
                         },
                         count: true
                     })
+                },
+                getProductListByFilter: async (obj, args) => {
+                    return models.Product.getProductByFilter(args);
                 }
             },
             Product: {
@@ -134,6 +138,7 @@ module.exports = class Product {
 
     static queryTypeDefs() {
         return `
+            getProductListByFilter(priceOrder: String, priceFrom: Float, priceTo: Float, name: String, isHaveDiscount: Boolean, categoryId: Int, limit: Int, offset: Int, characteristicId: Int, valueId: Int): ProductList
             getProductById(productId: Int): Product
             getProductList(limit: Int, offset: Int): ProductList
         `;

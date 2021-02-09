@@ -6,13 +6,13 @@ module.exports = class Gallery {
         return {
             Query: {
                 getGalleryById: async (obj, args) => {
-                    return models.Gallery.findItem({
+                    return models.Gallery.smartSearch({
                         options: args.galleryId,
                         error: true
                     })
                 },
                 getGalleryList: async (obj, args) => {
-                    return models.Gallery.findItem({
+                    return models.Gallery.smartSearch({
                         options: {
                             limit: args.limit || PAGINATION.DEFAULT_LIMIT,
                             offset: args.offset || PAGINATION.DEFAULT_OFFSET,
@@ -61,10 +61,10 @@ module.exports = class Gallery {
                     })
                 },
                 bulkAddImageToGallery: async (obj, {galleryId, imagesIds}) => {
-                    await models.Gallery.findItem({options: galleryId, error: true});
+                    await models.Gallery.smartSearch({options: galleryId, error: true});
                     await models.sequelize.transaction(async transaction => {
                        for (const imageId of imagesIds) {
-                           await models.Image.findItem({options: imageId, error: true});
+                           await models.Image.smartSearch({options: imageId, error: true});
                            await models.ImageGallery.createItem({
                               item: {galleryId, imageId},
                               transaction,
@@ -76,7 +76,7 @@ module.exports = class Gallery {
                            });
                        }
                     });
-                    return models.Gallery.findItem({
+                    return models.Gallery.smartSearch({
                         options: {
                             where: {id: galleryId},
                             include: {model: models.Image}

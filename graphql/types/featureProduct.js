@@ -1,57 +1,17 @@
 const models = require('../../models');
 const {PAGINATION} = require('../../config/constants');
+const {Op} = require('sequelize');
 
 module.exports = class FeatureProduct {
     static resolver() {
         return {
-            Query: {
-              getFeatureProductByProductId: async (obj, args) => {
-                  return models.FeatureProduct.findItem({
-                      options: {
-                          where: {
-                              productId: args.productId
-                          }
-                      },
-                      error: true
-                  })
-              },
-              getFeatureProductByValueId: async (obj, args) => {
-                  return models.FeatureProduct.findItem({
-                      options: {
-                          where: {
-                              valueId: args.valueId
-                          }
-                      },
-                      error: true
-                  })
-              },
-              getFeatureProductByCharacteristicId: async (obj, args) => {
-                  return models.FeatureProduct.findItem({
-                      options: {
-                          where: {
-                              characteristicId: args.characteristicId
-                          }
-                      },
-                      error: true
-                  })
-              },
-              getFeatureProductList: async (obj, args) => {
-                  return models.FeatureProduct.findItem({
-                      options: {
-                          limit: args.limit || PAGINATION.DEFAULT_LIMIT,
-                          offset: args.offset || PAGINATION.DEFAULT_OFFSET
-                      },
-                      count: true
-                  })
-              },
-            },
             FeatureProduct: {
                 value: featureProduct => featureProduct.getValue(),
-                characteristic: featureProduct => featureProduct.getCharacteristic(),
+                characteristic: featureProduct => featureProduct.getCharacteristic()
             },
             Mutation: {
                 updateCharacteristicInProduct: async (obj, args) => {
-                    const product = await models.Product.findItem({options: args.productId, error: true});
+                    const product = await models.Product.smartSearch({options: args.productId, error: true});
                     return models.FeatureProduct.updateItem({
                         options: {
                             where: {
@@ -109,7 +69,7 @@ module.exports = class FeatureProduct {
                     })
                 },
                 addCharacteristicToProduct:  async (obj, args) => {
-                    const product = await models.Product.findItem({options: args.productId, error: true});
+                    const product = await models.Product.smartSearch({options: args.productId, error: true});
                     return models.FeatureProduct.createItem({
                         item: {
                             productId: args.productId,
@@ -180,20 +140,12 @@ module.exports = class FeatureProduct {
                 updatedAt: String
                 value: Value
                 characteristic: Characteristic
+                product: Product
             }
             type FeatureProductList {
                 count: Int
                 rows: [FeatureProduct]
             }
-        `;
-    }
-
-    static queryTypeDefs() {
-        return `
-            getFeatureProductByProductId(productId: Int!): FeatureProduct
-            getFeatureProductByValueId(valueId: Int!): FeatureProduct
-            getFeatureProductByCharacteristicId(characteristicId: Int): FeatureProduct
-            getFeatureProductList(limit: Int, offset: Int): FeatureProductList
         `;
     }
 

@@ -7,10 +7,10 @@ module.exports = class Value {
         return {
             Query: {
                 getValueById: async(obj, args) => {
-                    return models.Value.findItem({options: args.valueId, error: true})
+                    return models.Value.smartSearch({options: args.valueId, error: true})
                 },
                 getValueList: async(obj, args) => {
-                    return models.Value.findItem({
+                    return models.Value.smartSearch({
                         options: {
                             limit: args.limit || PAGINATION.DEFAULT_LIMIT,
                             offset: args.offset || PAGINATION.DEFAULT_OFFSET

@@ -6,10 +6,10 @@ module.exports = class Permission {
         return {
             Query: {
                 getPermissionById: async (obj, args) => {
-                    return models.Permission.findItem({options: args.permissionId, error: true})
+                    return models.Permission.smartSearch({options: args.permissionId, error: true})
                 },
                 getPermissionList: async (obj, args) => {
-                    return models.Permission.findItem({
+                    return models.Permission.smartSearch({
                         options: {
                             limit: args.limit || PAGINATION.DEFAULT_LIMIT,
                             offset: args.offset || PAGINATION.DEFAULT_OFFSET

@@ -24,7 +24,7 @@ module.exports = class CategoryCharacteristic {
                             message: 'Characteristic added to this category'
                         }]
                     });
-                    return models.Category.findItem({options: args.categoryId})
+                    return models.Category.smartSearch({options: args.categoryId})
                 },
                 addCharacteristicsForCategory: async (obj, args) => {
                     if (args.characteristicIds.length) {
@@ -53,7 +53,7 @@ module.exports = class CategoryCharacteristic {
                             }
                         })
                     }
-                    return models.Category.findItem({options: args.categoryId})
+                    return models.Category.smartSearch({options: args.categoryId})
                 }
             }
         };

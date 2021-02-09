@@ -24,7 +24,7 @@ module.exports = class RolePermission {
                             message: 'Permission added to this role'
                         }]
                     });
-                    return models.Role.findItem({options: args.roleId})
+                    return models.Role.smartSearch({options: args.roleId})
                 },
                 addPermissionsForRole: async (obj, args) => {
                     if (args.permissionIds.length) {
@@ -53,7 +53,7 @@ module.exports = class RolePermission {
                             }
                         })
                     }
-                    return models.Role.findItem({options: args.roleId})
+                    return models.Role.smartSearch({options: args.roleId})
                 }
             }
         };

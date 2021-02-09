@@ -8,10 +8,10 @@ module.exports = class Category {
             Query: {
                 getCategoryById: async(obj, args) => {
                     // error true - return error if category not found
-                    return models.Category.findItem({options: args.categoryId, error: true})
+                    return models.Category.smartSearch({options: args.categoryId, error: true})
                 },
                 getCategoryList: async(obj, args) => {
-                    return models.Category.findItem({
+                    return models.Category.smartSearch({
                         options: {
                             limit: args.limit || PAGINATION.DEFAULT_LIMIT,
                             offset: args.offset || PAGINATION.DEFAULT_OFFSET

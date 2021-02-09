@@ -7,10 +7,10 @@ module.exports = class Characteristic {
         return {
             Query: {
                 getCharacteristicById: async(obj, args) => {
-                    return models.Characteristic.findItem({options: args.characteristicId, error: true})
+                    return models.Characteristic.smartSearch({options: args.characteristicId, error: true})
                 },
                 getCharacteristicList: async(obj, args) => {
-                    return models.Characteristic.findItem({
+                    return models.Characteristic.smartSearch({
                         options: {
                             limit: args.limit || PAGINATION.DEFAULT_LIMIT,
                             offset: args.offset || PAGINATION.DEFAULT_OFFSET

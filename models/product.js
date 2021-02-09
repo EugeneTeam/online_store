@@ -1,5 +1,7 @@
 'use strict';
 const {CRUDOptimisation} = require('../utils/CRUDOptimization');
+const {PAGINATION} = require('../config/constants');
+const {Op} = require('sequelize');
 
 module.exports = class Product extends CRUDOptimisation {
   static init(sequelize, DataType) {
@@ -75,5 +77,42 @@ module.exports = class Product extends CRUDOptimisation {
     this.belongsTo(models.Category, {
       foreignKey: 'categoryId'
     });
+  }
+
+  static async getProductByFilter(params) {
+    let priceFilter = [];
+    // filter by price
+    if (params.priceFrom) { priceFilter.push({[Op.gte]: params.priceFrom}); }
+    // filter by price
+    if (params.priceTo) { priceFilter.push({[Op.lte]: params.priceTo}); }
+    const options = {
+      // order
+      ...(params.priceOrder ? {order: [['price', params.priceOrder]]} : null),
+      // limit-offset
+      ...(params.limit ? {limit: params.limit || PAGINATION.DEFAULT_LIMIT} : null),
+      ...(params.offset ? {offset: params.offset || PAGINATION.DEFAULT_OFFSET} : null),
+      where: {
+        // filter by price
+        ...(priceFilter.length ? {price: {[Op.and]: priceFilter}} : null),
+        // filter by name
+        ...(params.name ? {name: {[Op.like]: `%${params.name}%`}} : null),
+        // product have discount
+        ...(params.isHaveDiscount ? {discountId: {[Op.not]: null}} : null),
+        // filter by category
+        ...(params.categoryId ? {categoryId: params.categoryId} : null),
+      },
+      include: {
+        model: this.sequelize.models.FeatureProduct,
+        where: {
+          // filter by characteristic
+          ...(params.characteristicId ? {characteristicId: params.characteristicId} : null),
+          // filter by value
+          ...(params.valueId ? {valueId: params.valueId} : null),
+        },
+        required: true,
+      }
+    };
+
+    return this.findAndCountAll(options);
   }
 }

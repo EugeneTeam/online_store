@@ -24,7 +24,7 @@ module.exports = class CharacteristicValue {
                             message: 'Value added to this characteristic'
                         }]
                     });
-                    return models.Characteristic.findItem({options: args.characteristicId})
+                    return models.Characteristic.smartSearch({options: args.characteristicId})
                 },
             }
         };

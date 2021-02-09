@@ -7,10 +7,10 @@ module.exports = class Image {
         return {
             Query: {
                 getImageById: async(obj, args) => {
-                    return models.Image.findItem({options: args.imageId, error: true})
+                    return models.Image.smartSearch({options: args.imageId, error: true})
                 },
                 getImageList: async(obj, args) => {
-                    return models.Image.findItem({
+                    return models.Image.smartSearch({
                         options: {
                             limit: args.limit || PAGINATION.DEFAULT_LIMIT,
                             offset: args.offset || PAGINATION.DEFAULT_OFFSET

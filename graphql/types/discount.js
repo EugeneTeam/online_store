@@ -7,10 +7,10 @@ module.exports = class Discount {
         return  {
             Query: {
                 getDiscountById: async (obj, args) => {
-                    return models.Discount.findItem({options: args.discountId, error: true});
+                    return models.Discount.smartSearch({options: args.discountId, error: true});
                 },
                 getDiscountList: async (obj, args) => {
-                    return models.Discount.findItem({
+                    return models.Discount.smartSearch({
                         options: {
                             limit: args.limit || PAGINATION.DEFAULT_LIMIT,
                             offset: args.offset || PAGINATION.DEFAULT_OFFSET,

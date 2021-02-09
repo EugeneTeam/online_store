@@ -24,7 +24,7 @@ module.exports = class ImageGallery {
                             message: 'Image added to this gallery'
                         }, ]
                     });
-                    return models.Gallery.findItem({options: args.galleryId})
+                    return models.Gallery.smartSearch({options: args.galleryId})
                 },
                 addImagesForGallery: async (obj, args) => {
                     if (args.imageIds.length) {
@@ -53,7 +53,7 @@ module.exports = class ImageGallery {
                             }
                         })
                     }
-                    return models.Gallery.findItem({options: args.galleryId})
+                    return models.Gallery.smartSearch({options: args.galleryId})
                 }
             }
         };

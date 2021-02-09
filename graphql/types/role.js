@@ -6,7 +6,7 @@ module.exports = class Role {
         return {
             Query: {
                 getRolesList: async (obj, args) => {
-                    return models.Role.findItem({
+                    return models.Role.smartSearch({
                         options: {
                             limit: args.limit || DEFAULT_LIMIT,
                             offset: args.offset || DEFAULT_OFFSET
@@ -15,7 +15,7 @@ module.exports = class Role {
                     })
                 },
                 getRoleById: async (obj, args) => {
-                    return  models.Role.findItem({options: args.roleId, error: true});
+                    return  models.Role.smartSearch({options: args.roleId, error: true});
                 }
             },
             Role: {

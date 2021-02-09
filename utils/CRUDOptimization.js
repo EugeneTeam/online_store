@@ -34,7 +34,7 @@ class CRUDOptimisation extends Model {
      * @param {string} message - при error: true будет возвращать пользовательский текст ошибки
      * @returns {Promise<*>}
      */
-    static async findItem({options, error = false, useFindAll= false, count = false, message = ''}) {
+    static async smartSearch({options, error = false, useFindAll= false, count = false, message = ''}) {
         const item = await this[this.returnMethodByValueType(options, useFindAll, count)](options);
 
         if (error && !item) {
@@ -99,7 +99,7 @@ class CRUDOptimisation extends Model {
                 const result = [];
                 if (dependency.length) {
                     for (const {options, table, error, message} of dependency) {
-                        const item = await (table ? this.models[table] : this).findItem({options});
+                        const item = await (table ? this.models[table] : this).smartSearch({options});
                         if (error && item) {
                             reject(new ApolloError(message ? message : `${table || this.name} id:${item.id} is exists`, '400'));
                         }
@@ -141,7 +141,7 @@ class CRUDOptimisation extends Model {
         if (dependency.length) {
             await this.checkDependencies(dependency);
         }
-        const item = await this.models[table ? table : this.name].findItem({
+        const item = await this.models[table ? table : this.name].smartSearch({
             options,
             errorIfNotExists: true
         });
@@ -159,7 +159,7 @@ class CRUDOptimisation extends Model {
      * @returns {Promise<string>}
      */
     static async removeItem({options, transaction = null}) {
-        const item = await this.findItem({
+        const item = await this.smartSearch({
             options,
             errorIfNotExists: true
         });
