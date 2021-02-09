@@ -16,16 +16,9 @@ module.exports = class FeatureProduct extends CRUDOptimisation {
         allowNull: false,
         type: DataType.INTEGER,
       },
-      createdAt: {
-        allowNull: false,
-        type: DataType.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: DataType.DATE
-      }
     }, {
-      sequelize
+      sequelize,
+      timestamp: false
     })
   }
 

@@ -23,8 +23,7 @@ module.exports = class FeatureProduct {
                         updatedItem: {
                             productId: args.productId,
                             characteristicId: args.newCharacteristicId,
-                            valueId: args.newValueId,
-                            updatedAt: new Date()
+                            valueId: args.newValueId
                         },
                         dependency: [
                             // if characteristic exists
@@ -75,8 +74,6 @@ module.exports = class FeatureProduct {
                             productId: args.productId,
                             characteristicId: args.characteristicId,
                             valueId: args.valueId,
-                            createdAt: new Date(),
-                            updatedAt: new Date()
                         },
                         dependency: [
                             {options: args.characteristicId, table: 'Characteristic'},
@@ -136,8 +133,6 @@ module.exports = class FeatureProduct {
                 productId: Int
                 characteristicId: Int
                 valueId: Int
-                createdAt: String
-                updatedAt: String
                 value: Value
                 characteristic: Characteristic
                 product: Product
