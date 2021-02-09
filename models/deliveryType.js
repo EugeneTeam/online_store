@@ -21,13 +21,11 @@ module.exports = class DeliveryType extends CRUDOptimisation {
       },
       createdAt: {
         allowNull: false,
-        type: DataType.DATE,
-        defaultValue: DataType.literal('CURRENT_TIMESTAMP'),
+        type: DataType.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: DataType.DATE,
-        defaultValue: DataType.literal('CURRENT_TIMESTAMP'),
+        type: DataType.DATE
       }
     }, {
       sequelize
