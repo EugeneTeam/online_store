@@ -73,9 +73,11 @@ module.exports = class Product extends CRUDOptimisation {
     this.belongsTo(models.Discount, {
       foreignKey: 'discountId'
     });
-
     this.belongsTo(models.Category, {
       foreignKey: 'categoryId'
+    });
+    this.hasMany(models.OrderPart, {
+      foreignKey: 'productId'
     });
   }
 

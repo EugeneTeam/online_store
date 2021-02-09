@@ -72,6 +72,9 @@ module.exports = class User extends CRUDOptimisation {
     this.belongsTo(models.Role, {
       foreignKey: 'roleId'
     });
+    this.hasMany(models.Order, {
+      foreignKey: 'receiverId'
+    });
   }
 
   encodeToken() {
