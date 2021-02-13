@@ -14,12 +14,29 @@ module.exports = {
         type: Sequelize.ENUM('NEW', 'BEING_FORMED', 'SENT', 'CANCELED'),
         defaultValue: 'NEW'
       },
-      receiverId: {
+      userId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
           model: 'Users'
         }
+      },
+      address: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      firstName: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      lastName: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      middleName: Sequelize.STRING,
+      phone: {
+        allowNull: false,
+        type: Sequelize.STRING
       },
       deliveryTypeId: {
         allowNull: false,

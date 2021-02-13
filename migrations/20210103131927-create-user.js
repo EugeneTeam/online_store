@@ -48,6 +48,11 @@ module.exports = {
           key: 'id'
         }
       },
+      isCustomer: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: true
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

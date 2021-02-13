@@ -16,6 +16,7 @@ module.exports = class Image extends CRUDOptimisation {
       },
       title: DataType.STRING,
       alt: DataType.STRING,
+      order: DataType.INTEGER,
       createdAt: {
         allowNull: false,
         type: DataType.DATE

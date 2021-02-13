@@ -24,7 +24,8 @@ module.exports = class Product {
             },
             Product: {
                 featureProduct: product => product.getFeatureProducts(),
-                category: product => product.getCategory()
+                category: product => product.getCategory(),
+                gallery: product => product.getGallery()
             },
             Mutation: {
                 createProduct: async (obj, args) => {
@@ -138,7 +139,7 @@ module.exports = class Product {
 
     static queryTypeDefs() {
         return `
-            getProductListByFilter(priceOrder: String, priceFrom: Float, priceTo: Float, name: String, isHaveDiscount: Boolean, categoryId: Int, limit: Int, offset: Int, characteristicId: Int, valueId: Int): ProductList
+            getProductListByFilter(priceOrder: String, priceFrom: Float, priceTo: Float, name: String, isHaveDiscount: Boolean, categoryId: Int, limit: Int, offset: Int, characteristicId: Int, valueId: Int, ids: [Int]): ProductList
             getProductById(productId: Int): Product
             getProductList(limit: Int, offset: Int): ProductList
         `;

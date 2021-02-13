@@ -15,12 +15,29 @@ module.exports = class Order extends CRUDOptimisation {
         type: DataType.ENUM('NEW', 'BEING_FORMED', 'SENT', 'CANCELED'),
         defaultValue: 'NEW'
       },
-      receiverId: {
+      userId: {
         allowNull: false,
         type: DataType.INTEGER,
         references: {
           model: 'Users'
         }
+      },
+      address: {
+        allowNull: false,
+        type: DataType.STRING
+      },
+      firstName: {
+        allowNull: false,
+        type: DataType.STRING
+      },
+      lastName: {
+        allowNull: false,
+        type: DataType.STRING
+      },
+      middleName: DataType.STRING,
+      phone: {
+        allowNull: false,
+        type: DataType.STRING
       },
       deliveryTypeId: {
         allowNull: false,
@@ -49,7 +66,7 @@ module.exports = class Order extends CRUDOptimisation {
       foreignKey: 'deliveryTypeId'
     });
     this.belongsTo(models.User, {
-      foreignKey: 'receiverId'
+      foreignKey: 'userId'
     });
     this.hasMany(models.OrderOrderPart, {
       foreignKey: 'orderId'

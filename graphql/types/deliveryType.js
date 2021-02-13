@@ -6,7 +6,7 @@ module.exports = class DeliveryType {
         return {
             Query: {
                 getDeliveryTypeById: async (obj, args) => {
-                    return models.DeliveryType.smartSearch({options: args.deliveryTypeId});
+                    return models.DeliveryType.smartSearch({options: args.deliveryTypeId, error: true});
                 },
                 getDeliveryTypeList: async (obj, args) => {
                     return models.DeliveryType.smartSearch({

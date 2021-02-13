@@ -55,6 +55,11 @@ module.exports = class User extends CRUDOptimisation {
           model: 'Roles',
         }
       },
+      isCustomer: {
+        allowNull: false,
+        type: DataType.BOOLEAN,
+        defaultValue: true
+      },
       createdAt: {
         allowNull: false,
         type: DataType.DATE
@@ -73,7 +78,7 @@ module.exports = class User extends CRUDOptimisation {
       foreignKey: 'roleId'
     });
     this.hasMany(models.Order, {
-      foreignKey: 'receiverId'
+      foreignKey: 'userId'
     });
   }
 

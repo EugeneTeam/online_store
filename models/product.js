@@ -102,6 +102,8 @@ module.exports = class Product extends CRUDOptimisation {
         ...(params.isHaveDiscount ? {discountId: {[Op.not]: null}} : null),
         // filter by category
         ...(params.categoryId ? {categoryId: params.categoryId} : null),
+        // filter by ids
+        ...(params.ids ? {id: {[Op.in]: params.ids}} : null)
       },
       include: {
         model: this.sequelize.models.FeatureProduct,
