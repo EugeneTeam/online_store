@@ -9,15 +9,20 @@ module.exports = class Order {
                 getOrderById: async (obj, args) => {
                     return models.Order.smartSearch({options: args.orderId, error: true});
                 },
-                getOrderList: async (obj, args) => {
+                getOrderList: async (obj, args, {user}) => {
                     return models.Order.smartSearch({
                         options: {
+                            where: {
+                                userId: user.isCustomer ? user.id : args.userId,
+                                // filter by status
+                                ...(args.status ? {status: args.status} : null)
+                            },
                             ...(args.limit ? {limit: args.limit || PAGINATION.DEFAULT_LIMIT} : null),
                             ...(args.offset ? {offset: args.offset || PAGINATION.DEFAULT_OFFSET} : null),
                         },
                         count: true
                     })
-                }
+                },
             },
             Order: {
               part: order => order.getOrderParts(),
@@ -80,6 +85,7 @@ module.exports = class Order {
                                 })
                             }
                         }
+                        return order;
                     })
                 },
             }
@@ -115,17 +121,13 @@ module.exports = class Order {
                 middleName: String
                 phone: String!
             }
-            input OrderPartInput {
-                productId: Int!
-                quantity: Int!
-            }
         `;
     }
 
     static queryTypeDefs() {
         return `
             getOrderById(orderId: Int!): Order
-            getOrderList(limit: Int, offset: Int): OrderList
+            getOrderList(limit: Int, offset: Int, status: String): OrderList
         `;
     }
 

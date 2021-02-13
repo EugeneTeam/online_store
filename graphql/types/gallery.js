@@ -23,7 +23,11 @@ module.exports = class Gallery {
                 }
             },
             Gallery: {
-              images: gallery => gallery.getImages()
+              images: gallery => gallery.getImages({
+                  order: [
+                      ['order', 'ASC']
+                  ]
+              })
             },
             Mutation: {
                 createGallery: async (obj, args) => {

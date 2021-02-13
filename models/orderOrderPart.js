@@ -22,7 +22,7 @@ module.exports = class OrderOrderPart extends CRUDOptimisation {
       }
     }, {
       sequelize,
-      timestamp: false
+      timestamps: false
     })
   }
 

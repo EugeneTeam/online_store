@@ -4,6 +4,12 @@ const {checkPermission, checkAuthorization, getMethodName} = require('../permiss
 
 const {resolvers, typeDefs} = require('./types')
 
+// list of public methods
+const excludeMethods = [
+    'authorization',
+    'getProductListByFilter'
+];
+
 module.exports = new ApolloServer({
     typeDefs: typeDefs,
     resolvers: resolvers,
@@ -13,7 +19,7 @@ module.exports = new ApolloServer({
         let context = {
             user: null
         }
-        if (method !== 'authorization') {
+        if (!excludeMethods.includes(method)) {
             context.user = await checkAuthorization(req);
             checkPermission(req.body.query, context.user);
         }
