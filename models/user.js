@@ -85,6 +85,9 @@ module.exports = class User extends CRUDOptimisation {
     this.hasMany(models.Order, {
       foreignKey: 'userId'
     });
+    this.hasMany(models.Bookmark, {
+      foreignKey: 'userId',
+    });
   }
 
   static checkTokenForExpirationDate(token) {
