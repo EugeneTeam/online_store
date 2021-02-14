@@ -7,6 +7,9 @@ const {resolvers, typeDefs} = require('./types')
 // list of public methods
 const excludeMethods = [
     'authorization',
+    'registration',
+    'resendAccountConfirmationEmail',
+    'confirmationUserAccount',
     'getProductListByFilter'
 ];
 

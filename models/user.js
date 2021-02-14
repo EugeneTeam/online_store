@@ -1,7 +1,10 @@
 'use strict';
 require('dotenv').config();
 const {CRUDOptimisation} = require('../utils/CRUDOptimization');
-const {SALT_ROUNDS, AUTH_TOKEN_SIZE} = require('../config/constants');
+const {
+  SALT_ROUNDS, AUTH_TOKEN_SIZE,
+  ACTIVATION_TOKEN_VALIDITY_PERIOD
+} = require('../config/constants');
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const randToken = require('rand-token');
@@ -44,6 +47,7 @@ module.exports = class User extends CRUDOptimisation {
         type: DataType.STRING
       },
       resetToken: DataType.STRING,
+      activationToken: DataType.STRING,
       authToken: {
         allowNull: false,
         type: DataType.STRING
@@ -80,6 +84,10 @@ module.exports = class User extends CRUDOptimisation {
     this.hasMany(models.Order, {
       foreignKey: 'userId'
     });
+  }
+
+  static generateActivationToken() {
+    return `${randToken.generate(16)}_${Date.now() + ACTIVATION_TOKEN_VALIDITY_PERIOD}`;
   }
 
   encodeToken() {

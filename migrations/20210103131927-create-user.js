@@ -31,6 +31,7 @@ module.exports = {
         type: Sequelize.ENUM('ACTIVE', 'INACTIVE', 'BANNED'),
         defaultValue: 'INACTIVE'
       },
+      activationToken: Sequelize.STRING,
       passwordHash: {
         allowNull: false,
         type: Sequelize.STRING
