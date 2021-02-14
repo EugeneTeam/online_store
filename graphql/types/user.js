@@ -3,8 +3,6 @@ const models = require('../../models');
 const {auth_error, invalid_credential} = require('../../config/errorList');
 const {checkFields} = require('../../utils/checkRequiredFields');
 const {sendMail} = require('../../mailer/index');
-const randomToken = require('rand-token');
-const {ACTIVATION_TOKEN_VALIDITY_PERIOD} = require('../../config/constants');
 
 module.exports = class User {
     static resolver() {
@@ -36,13 +34,46 @@ module.exports = class User {
                 }
             },
             Mutation: {
+                sendRequestToChangePassword: async (obj, {email}) => {
+                    const resetToken = models.User.generateLimitedTimeToken();
+                    const user = await models.User.findOne({where: {email}});
+                    if (!user) {
+                        throw new ApolloError('User not found', '404');
+                    }
+
+                    await user.update({resetToken});
+                    await sendMail(
+                        user.email,
+                        'Смена пароля',
+                        'Смена пароля',
+                        'changePassword',
+                        {
+                            username: user.firstName,
+                            url: `${process.env.URL_TO_CONFIRM_PASSWORD_CHANGE}${resetToken}`
+                        });
+                    return true;
+                },
+                confirmPasswordChange: async (obj, {newPassword, resetToken}) => {
+                    models.User.checkTokenForExpirationDate(resetToken);
+
+                    const user = await models.User.findOne({where: {resetToken}});
+                    if (!user) {
+                        throw new ApolloError('User not found', '404');
+                    }
+
+
+                    await user.update({
+                        passwordHash: await models.User.encryptPassword(newPassword),
+                    });
+                    return true;
+                },
                 resendAccountConfirmationEmail: async (obj, {email}) => {
                     const user = await models.User.findOne({where: {email}});
                     if (!user) {
                         throw new ApolloError('User not found', '404');
                     }
 
-                    const activationToken = models.User.generateActivationToken();
+                    const activationToken = models.User.generateLimitedTimeToken();
                     await user.update({activationToken})
 
                     await sendMail(
@@ -52,17 +83,13 @@ module.exports = class User {
                         'completeRegistration',
                         {
                             username: user.firstName,
-                            url: `https://www.testurl.com/confirm/email/${activationToken}`
+                            url: `${process.env.URL_TO_VERIFY_YOU_ACCOUNT}${activationToken}`
                         });
                     return true;
                 },
                 confirmationUserAccount: async (obj, {activationToken}) => {
-                    const token = activationToken.split('_');
-                    if (new Date() > new Date(token[1])) {
-                        throw new ApolloError('ActivationToken has expired', '400');
-                    }
+                    models.User.checkTokenForExpirationDate(activationToken)
                     const user = await models.User.findOne({where: {activationToken}});
-
                     if (!user) {
                         throw new ApolloError('User not found', '404');
                     }
@@ -74,7 +101,7 @@ module.exports = class User {
                 },
                 registration: async (obj, args) => {
                     checkFields(args, ['password', 'firstName', 'lastName', 'email', 'phone']);
-                    const activationToken = models.User.generateActivationToken();
+                    const activationToken = models.User.generateLimitedTimeToken();
                     const newUser = await models.User.createItem({
                         item: {
                             firstName: args.firstName,
@@ -118,6 +145,8 @@ module.exports = class User {
 
     static mutationTypeDefs() {
         return `
+            sendRequestToChangePassword(email: String!): Boolean
+            confirmPasswordChange(newPassword: String!, resetToken: String!): Boolean
             resendAccountConfirmationEmail(email: String!): Boolean
             confirmationUserAccount(activationToken: String!): Boolean
             registration(password: String!, email: String!, phone: String!, firstName: String!, lastName: String!): String

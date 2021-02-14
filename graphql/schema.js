@@ -10,7 +10,9 @@ const excludeMethods = [
     'registration',
     'resendAccountConfirmationEmail',
     'confirmationUserAccount',
-    'getProductListByFilter'
+    'getProductListByFilter',
+    'sendRequestToChangePassword',
+    'confirmPasswordChange',
 ];
 
 module.exports = new ApolloServer({

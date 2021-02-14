@@ -9,6 +9,7 @@ const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const randToken = require('rand-token');
 const moment = require('moment');
+const {ApolloError} = require('apollo-server');
 
 module.exports = class User extends CRUDOptimisation {
   static init(sequelize, DataType) {
@@ -86,8 +87,24 @@ module.exports = class User extends CRUDOptimisation {
     });
   }
 
-  static generateActivationToken() {
-    return `${randToken.generate(16)}_${Date.now() + ACTIVATION_TOKEN_VALIDITY_PERIOD}`;
+  static checkTokenForExpirationDate(token) {
+    if (!token) {
+      throw new ApolloError('toke is require', '400');
+    }
+
+    const partsOfTheToken = token.split('_');
+    if (partsOfTheToken.length < 2) {
+      throw new ApolloError('Invalid token', '400');
+    }
+
+    if (new Date() > new Date(Number(token[1]))) {
+      throw new ApolloError('ActivationToken has expired', '400');
+    }
+    return token;
+  }
+
+  static generateLimitedTimeToken(millisecond = null) {
+    return `${randToken.generate(16)}_${Date.now() + (millisecond ? millisecond : ACTIVATION_TOKEN_VALIDITY_PERIOD)}`;
   }
 
   encodeToken() {
