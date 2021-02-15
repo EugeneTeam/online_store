@@ -109,11 +109,9 @@ module.exports = class Product {
            type Product { 
                 id: Int
                 name: String
-                categoryId: Int
                 description: String
                 price: Float
                 discountId: Int
-                galleryId: Int
                 rating: Float
                 createdAt: String
                 updatedAt: String

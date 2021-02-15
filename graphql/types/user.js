@@ -36,6 +36,9 @@ module.exports = class User {
                         })
                 }
             },
+            User: {
+              role: user => user.getRole(),
+            },
             Mutation: {
                 sendRequestToChangePassword: async (obj, {email}) => {
                     const resetToken = models.User.generateLimitedTimeToken();
@@ -165,7 +168,7 @@ module.exports = class User {
                 email: String
                 status: String
                 authToken: String
-                roleId: Int
+                role: Role
                 createdAt: String
                 updatedAt: String
             }

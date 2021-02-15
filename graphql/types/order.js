@@ -93,8 +93,8 @@ module.exports = class Order {
                 id: Int
                 status: String
                 user: User
-                deliveryTypeId: DeliveryType
-                paymentTypeId: PaymentType
+                deliveryType: DeliveryType
+                paymentType: PaymentType
                 address: String
                 firstName: String
                 lastName: String

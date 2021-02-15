@@ -35,11 +35,10 @@ module.exports = class OrderPart {
         return `
             type OrderPart {
                 id: Int
-                productId: Int
+                product: Product
                 quantity: Int
                 createdAt: String
                 updatedAt: String
-                product: Product
             }
             input OrderPartInput {
                 productId: Int!

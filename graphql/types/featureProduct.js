@@ -7,7 +7,8 @@ module.exports = class FeatureProduct {
         return {
             FeatureProduct: {
                 value: featureProduct => featureProduct.getValue(),
-                characteristic: featureProduct => featureProduct.getCharacteristic()
+                characteristic: featureProduct => featureProduct.getCharacteristic(),
+                product: featureProduct => featureProduct.getProduct()
             },
             Mutation: {
                 updateCharacteristicInProduct: async (obj, args) => {
@@ -130,9 +131,6 @@ module.exports = class FeatureProduct {
     static typeDefs() {
         return `
             type FeatureProduct {
-                productId: Int
-                characteristicId: Int
-                valueId: Int
                 value: Value
                 characteristic: Characteristic
                 product: Product
