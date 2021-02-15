@@ -24,17 +24,11 @@ module.exports = class Value {
                     return models.Value.createItem({
                         item: {
                             value: args.value,
-                            type: args.type,
                             createdAt: new Date(),
                             updatedAt: new Date()
                         },
                         dependency: [{
-                            options: {
-                                where: {
-                                    value: args.value,
-                                    type: args.type
-                                }
-                            },
+                            options: {where: {value: args.value}},
                             error: true,
                             message: `Value "${args.value}" is exists`
                         }]
@@ -45,20 +39,16 @@ module.exports = class Value {
                         options: args.valueId,
                         updatedItem: {
                             value: args.value,
-                            type: args.type,
                             updatedAt: new Date()
                         },
                         dependency: [
                             {options: args.valueId},
                             {
                                 options: {
-                                    where: {
-                                        value: args.value,
-                                        type: args.type
-                                    }
+                                    where: {value: args.value}
                                 },
                                 error: true,
-                                message: `Value "${args.value}" and type "${args.type}" is used`
+                                message: `Value "${args.value}" is exists`
                             }
                         ]
                     })
@@ -86,7 +76,6 @@ module.exports = class Value {
            type Value { 
                 id: Int
                 value: String
-                type: String
                 createdAt: String
                 updatedAt: String
            }
@@ -99,8 +88,8 @@ module.exports = class Value {
 
     static mutationTypeDefs() {
         return `
-            createValue(value: String!, type: String!): Value
-            updateValue(valueId: Int!, value: String!, type: String!): Value
+            createValue(value: String!): Value
+            updateValue(valueId: Int!, value: String!): Value
             removeValue(valueId: Int!): String
             bulkDeleteValue(valueIds: [Int]!): Int
         `;

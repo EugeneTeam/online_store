@@ -2,14 +2,14 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkInsert('DeliveryTypes', [
+    await queryInterface.bulkInsert('PaymentTypes', [
         {
-            name: 'К отделению новой почты',
+            name: 'Оплата при получение',
             createdAt: new Date(),
             updatedAt: new Date(),
         },
         {
-            name: 'Доставка курьером',
+            name: 'Оплата картой Visa/MasterCard (LiqPay)',
             createdAt: new Date(),
             updatedAt: new Date(),
         },
@@ -17,6 +17,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('DeliveryTypes', {}, {});
+    await queryInterface.bulkDelete('PaymentTypes', {}, {});
   }
 };

@@ -1,17 +1,22 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Values', {
+    await queryInterface.createTable('PaymentTypes', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      value: {
+      name: {
         allowNull: false,
         unique: true,
         type: Sequelize.STRING
+      },
+      status: {
+        allowNull: false,
+        type: Sequelize.ENUM('ACTIVE', 'INACTIVE'),
+        defaultValue: 'INACTIVE'
       },
       createdAt: {
         allowNull: false,
@@ -26,6 +31,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Values');
+    await queryInterface.dropTable('PaymentTypes');
   }
 };

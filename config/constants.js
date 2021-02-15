@@ -5,5 +5,5 @@ module.exports = {
         DEFAULT_LIMIT: 100,
         DEFAULT_OFFSET: 0
     },
-    ACTIVATION_TOKEN_VALIDITY_PERIOD: 60 * 1000 * 10
+    ACTIVATION_TOKEN_VALIDITY_PERIOD: 60 * 1000 * 10 //10 min
 }

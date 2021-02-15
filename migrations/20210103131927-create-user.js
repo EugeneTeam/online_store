@@ -16,6 +16,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
+      middleName: Sequelize.STRING,
       phone: {
         allowNull: false,
         type: Sequelize.STRING,

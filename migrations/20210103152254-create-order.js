@@ -45,6 +45,13 @@ module.exports = {
           model: 'DeliveryTypes'
         }
       },
+      paymentTypeId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'PaymentTypes'
+        }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

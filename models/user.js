@@ -5,6 +5,7 @@ const {
   SALT_ROUNDS, AUTH_TOKEN_SIZE,
   ACTIVATION_TOKEN_VALIDITY_PERIOD
 } = require('../config/constants');
+const {tokenErrors} = require('../config/errorList');
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const randToken = require('rand-token');
@@ -88,20 +89,23 @@ module.exports = class User extends CRUDOptimisation {
     this.hasMany(models.Bookmark, {
       foreignKey: 'userId',
     });
+    this.hasMany(models.OrderPart, {
+      foreignKey: 'userId'
+    });
   }
 
   static checkTokenForExpirationDate(token) {
     if (!token) {
-      throw new ApolloError('toke is require', '400');
+      throw new ApolloError(tokenErrors.token_required.message, tokenErrors.token_required.code);
     }
 
     const partsOfTheToken = token.split('_');
     if (partsOfTheToken.length < 2) {
-      throw new ApolloError('Invalid token', '400');
+      throw new ApolloError(tokenErrors.invalid_token.message, tokenErrors.invalid_token.code);
     }
 
-    if (new Date() > new Date(Number(token[1]))) {
-      throw new ApolloError('ActivationToken has expired', '400');
+    if (new Date() > new Date(Number(partsOfTheToken[1]))) {
+      throw new ApolloError(tokenErrors.token_expired.message, tokenErrors.token_expired.code);
     }
     return token;
   }

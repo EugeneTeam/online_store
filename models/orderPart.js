@@ -21,6 +21,13 @@ module.exports = class OrderPart extends CRUDOptimisation {
         allowNull: false,
         type: DataType.INTEGER,
       },
+      userId: {
+        allowNull: false,
+        type: DataType.INTEGER,
+        references: {
+          model: 'Users'
+        }
+      },
       createdAt: {
         allowNull: false,
         type: DataType.DATE
@@ -44,6 +51,9 @@ module.exports = class OrderPart extends CRUDOptimisation {
     this.belongsToMany(models.Order, {
       through: models.OrderOrderPart,
       foreignKey: 'orderPartId'
+    });
+    this.belongsTo(models.User, {
+      foreignKey: 'userId'
     });
   }
 }

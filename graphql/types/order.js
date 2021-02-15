@@ -25,10 +25,13 @@ module.exports = class Order {
                 },
             },
             Order: {
-              part: order => order.getOrderParts(),
+                part: order => order.getOrderParts(),
+                user: order => order.getUser(),
+                deliveryTypeId: order => order.getDeliveryType(),
+                paymentTypeId: order => order.getPaymentType(),
             },
             Mutation: {
-                createOrder: async (obj, {orderInput, orderPartInput}, {user}) => {
+                createOrder: async (obj, {orderInput}, {user}) => {
                     if (!user.isCustomer && !orderInput.userId) {
                         throw new ApolloError('userId is require', '400');
                     }
@@ -64,26 +67,18 @@ module.exports = class Order {
                             ]
                         });
 
-                        if (orderPartInput && orderPartInput.length) {
-                            for (const orderPart of orderPartInput) {
-                                const newOrderPart = await models.OrderPart.createItem({
-                                    transaction,
-                                    item: {
-                                        productId: orderPart.productId,
-                                        quantity: orderPart.quantity,
-                                        createdAt: new Date(),
-                                        updatedAt: new Date(),
-                                    },
-                                    dependency: [{options: orderPart.productId, table: 'Product'}]
-                                });
-                                await models.OrderOrderPart.createItem({
-                                    transaction,
-                                    item: {
-                                        orderId: order.id,
-                                        orderPartId: newOrderPart.id
-                                    },
-                                })
-                            }
+                        const orderPartList = await models.OrderPart.findAll({
+                            userId: user.id
+                        });
+
+                        for (const orderPart of orderPartList) {
+                            await models.OrderOrderPart.createItem({
+                                transaction,
+                                item: {
+                                    orderId: order.id,
+                                    orderPartId: orderPart.id
+                                },
+                            })
                         }
                         return order;
                     })
@@ -97,8 +92,9 @@ module.exports = class Order {
             type Order {
                 id: Int
                 status: String
-                userId: Int
-                deliveryTypeId: Int
+                user: User
+                deliveryTypeId: DeliveryType
+                paymentTypeId: PaymentType
                 address: String
                 firstName: String
                 lastName: String
@@ -133,7 +129,7 @@ module.exports = class Order {
 
     static mutationTypeDefs() {
         return `
-            createOrder(orderInput: OrderInput, orderPartInput: [OrderPartInput]): Order
+            createOrder(orderInput: OrderInput!): Order
         `;
     }
 }

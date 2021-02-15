@@ -1,4 +1,4 @@
-const {ApolloServer, gql} = require('apollo-server-express')
+const {ApolloServer} = require('apollo-server-express')
 const _ = require('lodash');
 const {checkPermission, checkAuthorization, getMethodName} = require('../permission/checkPermission');
 
@@ -24,7 +24,7 @@ module.exports = new ApolloServer({
         let context = {
             user: null
         }
-        if (!excludeMethods.includes(method)) {
+        if (method && !excludeMethods.includes(method)) {
             context.user = await checkAuthorization(req);
             checkPermission(req.body.query, context.user);
         }

@@ -39,6 +39,13 @@ module.exports = class Order extends CRUDOptimisation {
         allowNull: false,
         type: DataType.STRING
       },
+      paymentTypeId: {
+        allowNull: false,
+        type: DataType.INTEGER,
+        references: {
+          model: 'PaymentTypes'
+        }
+      },
       deliveryTypeId: {
         allowNull: false,
         type: DataType.INTEGER,

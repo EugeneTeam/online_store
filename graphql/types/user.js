@@ -1,6 +1,6 @@
 const {ApolloError} = require('apollo-server');
 const models = require('../../models');
-const {auth_error, invalid_credential} = require('../../config/errorList');
+const {userError} = require('../../config/errorList');
 const {checkFields} = require('../../utils/checkRequiredFields');
 const {sendMail} = require('../../mailer/index');
 
@@ -10,26 +10,29 @@ module.exports = class User {
             Query: {
                 authorization: async (obj, args) => {
                     checkFields(args, ['email', 'password']);
-                    const isUserExists = await models.User.findOne({
+                    const user = await models.User.findOne({
                         where: {
                             email: args.email
                         }
                     });
 
-                    if (!isUserExists) {
-                        throw new ApolloError(auth_error.message, auth_error.code);
+                    if (!user) {
+                        throw new ApolloError(userError.user_not_found.message, userError.user_not_found.code);
+                    }
+                    if (user.status === 'INACTIVE') {
+                        throw new ApolloError(userError.account_is_inactive.message, userError.account_is_inactive.code)
                     }
 
-                    return models.User.decryptPassword(args.password, isUserExists.passwordHash)
+                    return models.User.decryptPassword(args.password, userError.passwordHash)
                         .then(async response => {
                             if (response) {
-                                return isUserExists.generateAccessToken(args.rememberMe || false)
+                                return user.generateAccessToken(args.rememberMe || false)
                             } else {
-                                throw new ApolloError(invalid_credential.message, invalid_credential.code);
+                                throw new ApolloError(userError.invalid_credential.message, userError.invalid_credential.code);
                             }
                         })
                         .catch(error => {
-                            throw new ApolloError(invalid_credential.message, invalid_credential.code);
+                            throw new ApolloError(userError.invalid_credential.message, userError.invalid_credential.code);
                         })
                 }
             },
@@ -38,7 +41,7 @@ module.exports = class User {
                     const resetToken = models.User.generateLimitedTimeToken();
                     const user = await models.User.findOne({where: {email}});
                     if (!user) {
-                        throw new ApolloError('User not found', '404');
+                        throw new ApolloError(userError.user_not_found.message, userError.user_not_found.code);
                     }
 
                     await user.update({resetToken});
@@ -58,7 +61,7 @@ module.exports = class User {
 
                     const user = await models.User.findOne({where: {resetToken}});
                     if (!user) {
-                        throw new ApolloError('User not found', '404');
+                        throw new ApolloError(userError.user_not_found.message, userError.user_not_found.code);
                     }
 
 
@@ -70,7 +73,7 @@ module.exports = class User {
                 resendAccountConfirmationEmail: async (obj, {email}) => {
                     const user = await models.User.findOne({where: {email}});
                     if (!user) {
-                        throw new ApolloError('User not found', '404');
+                        throw new ApolloError(userError.user_not_found.message, userError.user_not_found.code);
                     }
 
                     const activationToken = models.User.generateLimitedTimeToken();
@@ -91,7 +94,7 @@ module.exports = class User {
                     models.User.checkTokenForExpirationDate(activationToken)
                     const user = await models.User.findOne({where: {activationToken}});
                     if (!user) {
-                        throw new ApolloError('User not found', '404');
+                        throw new ApolloError(userError.user_not_found.message, userError.user_not_found.code);
                     }
 
                     await user.update({
