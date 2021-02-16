@@ -62,9 +62,13 @@ const getMethodName = query => {
      *     }
      * }
      */
+    /**
+     * case 5
+     * {someMethod}
+     */
     let temp = query.replace(/[\n]/g, '').replace(/[ ]/g, '');
     const isCase1 = temp[0] === '{';
-    const end = temp.substring(1, temp.length).search(/{\(/g);
+    const end = temp.substring(1, temp.length).search(/[{}()]/g);
     const result = temp.substring(isCase1 ? 1 : 'query'.length, end + 1);
     if (result === 'IntrospectionQuery') {
         return null;
@@ -73,8 +77,8 @@ const getMethodName = query => {
 }
 
 const checkAuthorization = async req => {
-    if (req.headers &&  req.headers.token) {
-        const token = req.headers.token.split(' ');
+    if (req.headers && req.headers.authorization) {
+        const token = req.headers.authorization.split(' ');
         if (token[0] === 'Bearer' && token[1]) {
             const result = await models.User.decodeToken(token[1])
             if (result && result.message === 'Token expired') {

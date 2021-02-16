@@ -82,6 +82,9 @@ module.exports = class Product extends CRUDOptimisation {
     this.hasMany(models.Bookmark, {
       foreignKey: 'productId',
     });
+    this.hasMany(models.Comment, {
+      foreignKey: 'productId',
+    });
   }
 
   static async getProductByFilter(params) {

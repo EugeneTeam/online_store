@@ -27,8 +27,8 @@ module.exports = class Order {
             Order: {
                 part: order => order.getOrderParts(),
                 user: order => order.getUser(),
-                deliveryTypeId: order => order.getDeliveryType(),
-                paymentTypeId: order => order.getPaymentType(),
+                deliveryType: order => order.getDeliveryType(),
+                paymentType: order => order.getPaymentType(),
             },
             Mutation: {
                 createOrder: async (obj, {orderInput}, {user}) => {

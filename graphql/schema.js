@@ -13,6 +13,10 @@ const excludeMethods = [
     'getProductListByFilter',
     'sendRequestToChangePassword',
     'confirmPasswordChange',
+    'getProductById',
+    'getProductList',
+    'getProductListByFilter',
+    'getReplyComments'
 ];
 
 module.exports = new ApolloServer({
