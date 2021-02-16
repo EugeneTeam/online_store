@@ -5,6 +5,19 @@
  */
 
 module.exports = {
+    getCommentList: {permissions: ['comment show']},
+    removeComment: {permissions: ['comment delete']},
+
+    getDeliveryTypeById: {permissions: ['deliveryType show']},
+    createDeliveryType: {permissions: ['deliveryType create']},
+    updateDeliveryType: {permissions: ['deliveryType update']},
+    removeDeliveryType: {permissions: ['deliveryType delete']},
+
+    getPaymentTypeById: {permissions: ['paymentType show']},
+    createPaymentType: {permissions: ['paymentType create']},
+    updatePaymentType: {permissions: ['paymentType update']},
+    removePaymentType: {permissions: ['paymentType delete']},
+
     getCategoryById: {permissions: ['category show']},
     getCategoryList: {permissions: ['category show']},
     createCategory: {permissions: ['category create']},

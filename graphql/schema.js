@@ -4,7 +4,6 @@ const {checkPermission, checkAuthorization, getMethodName} = require('../permiss
 
 const {resolvers, typeDefs} = require('./types')
 
-// list of public methods
 const excludeMethods = [
     'authorization',
     'registration',
@@ -16,14 +15,23 @@ const excludeMethods = [
     'getProductById',
     'getProductList',
     'getProductListByFilter',
-    'getReplyComments'
+    'getReplyComments',
+    // 'getBookmarkListByUserId',
+    // 'createBookmark',
+    // 'removeBookmark',
+    // 'createComment',
+    // 'replyToComment',
+    'getDeliveryTypeList',
+    // 'getOrderPartsListByUserId',
+    // 'createOrderPart',
+    'getPaymentTypeList',
 ];
 
 module.exports = new ApolloServer({
     typeDefs: typeDefs,
     resolvers: resolvers,
     formatError: error => error,
-    context: async ({req, res}) => {
+    context: async ({req}) => {
         const method = getMethodName(req.body.query);
         let context = {
             user: null

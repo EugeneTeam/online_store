@@ -28,6 +28,9 @@ module.exports = class Comment {
             },
             Mutation: {
                 createComment: async (obj, {createComment}, {user}) => {
+                    if (createComment.rating > 5 || createComment.rating < 0) {
+                        throw new ApolloError('valid value for rating is from 0 to 5', '400');
+                    }
                     return models.Comment.createItem({
                         item: {
                             userId: user.id,
@@ -47,10 +50,10 @@ module.exports = class Comment {
                         item: {
                             userId: user.id,
                             productId: replyComment.productId,
-                            limitations: replyComment.limitations || null,
-                            dignity: replyComment.dignity || null,
+                            limitations: null,
+                            dignity: null,
                             text: replyComment.text,
-                            rating: replyComment.rating,
+                            rating: 0,
                             parentId: replyComment.parentId,
                             createdAt: new Date(),
                             updatedAt: new Date(),
@@ -89,10 +92,7 @@ module.exports = class Comment {
             }
             input ReplyCommentInput {
                 productId: Int
-                limitations: String
-                dignity: String
                 text: String!
-                rating: Float!
                 parentId: Int!
             }
             type CommentList {

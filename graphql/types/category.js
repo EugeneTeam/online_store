@@ -7,7 +7,6 @@ module.exports = class Category {
         return {
             Query: {
                 getCategoryById: async(obj, args) => {
-                    // error true - return error if category not found
                     return models.Category.smartSearch({options: args.categoryId, error: true})
                 },
                 getCategoryList: async(obj, args) => {

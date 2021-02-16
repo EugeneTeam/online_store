@@ -43,13 +43,20 @@ module.exports = {
         {name: 'role update'},//37
         {name: 'role delete'},//38
         {name: 'role show'},//39
-
+        {name: 'comment show'},//40
+        {name: 'comment delete'},//41
+        {name: 'deliveryType create'},//42
+        {name: 'deliveryType update'},//43
+        {name: 'deliveryType delete'},//44
+        {name: 'deliveryType show'},//45
+        {name: 'paymentType create'},//46
+        {name: 'paymentType update'},//47
+        {name: 'paymentType delete'},//48
+        {name: 'paymentType show'},//49
         ], {});
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('Permissions', {name: [
-        'product create', 'product update',  'product delete', 'product show'
-      ]}, {});
+    await queryInterface.bulkDelete('Permissions', {}, {});
   }
 };
