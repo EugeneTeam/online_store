@@ -40,9 +40,27 @@ module.exports = class User {
               role: user => user.getRole(),
             },
             Mutation: {
-                // admin
-                // banUser: () => {},
-                // unBanUser: () => {}
+                banUnbanUser: async (obj, args) => {
+                    return models.User.updateItem({
+                        options: args.userId,
+                        updatedItem: {
+                            status: args.status
+                        },
+                        dependency: [
+                            {options: args.userId},
+                            {
+                                options: {
+                                    where: {
+                                        id: args.userId,
+                                        status: args.status
+                                    }
+                                },
+                                error: true,
+                                message: args.status === 'BANNED' ? 'User is already blocked' : 'User is already unlocked'
+                            },
+                        ]
+                    });
+                },
                 sendRequestToChangePassword: async (obj, {email}) => {
                     const resetToken = models.User.generateLimitedTimeToken();
                     const user = await models.User.findOne({where: {email}});
@@ -159,6 +177,7 @@ module.exports = class User {
             resendAccountConfirmationEmail(email: String!): Boolean
             confirmationUserAccount(activationToken: String!): Boolean
             registration(password: String!, email: String!, phone: String!, firstName: String!, lastName: String!): String
+            banUnbanUser(userId: Int!, status: String!): User
         `;
     }
 
