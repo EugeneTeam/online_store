@@ -11,20 +11,31 @@ module.exports = class RolePermission {
                             roleId: args.roleId,
                         },
                         dependency: [
-                            {options: args.roleId, table: 'Role'},
-                            {options: args.permissionId, table: 'Permission'},
                             {
-                            options: {
-                                where: {
-                                    permissionId: args.permissionId,
-                                    roleId: args.roleId,
-                                }
+                                options: args.roleId,
+                                tableName: 'Role',
+                                errorIfElementDoesNotExist: true
                             },
-                            error: true,
-                            message: 'Permission added to this role'
-                        }]
+                            {
+                                options: args.permissionId,
+                                tableName: 'Permission',
+                                errorIfElementDoesNotExist: true
+                            },
+                            {
+                                options: {
+                                    where: {
+                                        permissionId: args.permissionId,
+                                        roleId: args.roleId,
+                                    }
+                                },
+                                errorIfElementExists: true,
+                                customErrorMessage: 'Permission added to this role'
+                            }
+                        ]
                     });
-                    return models.Role.smartSearch({options: args.roleId})
+                    return models.Role.smartSearch({
+                        options: args.roleId
+                    });
                 },
                 addPermissionsForRole: async (obj, args) => {
                     if (args.permissionIds.length) {
@@ -37,23 +48,34 @@ module.exports = class RolePermission {
                                     },
                                     transaction,
                                     dependency: [
-                                        {options: args.roleId, table: 'Role'},
-                                        {options: args.permissionId, table: 'Permission'},
                                         {
-                                        options: {
-                                            where: {
-                                                permissionId: id,
-                                                roleId: args.roleId,
-                                            }
+                                            options: args.roleId,
+                                            tableName: 'Role',
+                                            errorIfElementDoesNotExist: true
                                         },
-                                        error: true,
-                                        message: `Permission (Id:${id}) added to this role`
-                                    }]
-                                })
+                                        {
+                                            options: args.permissionId,
+                                            tableName: 'Permission',
+                                            errorIfElementDoesNotExist: true
+                                        },
+                                        {
+                                            options: {
+                                                where: {
+                                                    permissionId: id,
+                                                    roleId: args.roleId,
+                                                }
+                                            },
+                                            errorIfElementExists: true,
+                                            customErrorMessage: `Permission (Id:${id}) added to this role`
+                                        }
+                                    ]
+                                });
                             }
                         })
                     }
-                    return models.Role.smartSearch({options: args.roleId})
+                    return models.Role.smartSearch({
+                        options: args.roleId
+                    });
                 }
             }
         };

@@ -7,7 +7,9 @@ module.exports = class Category {
         return {
             Query: {
                 getCategoryById: async(obj, args) => {
-                    return models.Category.smartSearch({options: args.categoryId, error: true})
+                    return models.Category.smartSearch({
+                        options: args.categoryId
+                    });
                 },
                 getCategoryList: async(obj, args) => {
                     return models.Category.smartSearch({
@@ -15,7 +17,7 @@ module.exports = class Category {
                             limit: args.limit || PAGINATION.DEFAULT_LIMIT,
                             offset: args.offset || PAGINATION.DEFAULT_OFFSET
                         },
-                        count: true
+                        returnsCountAndList: true
                     })
                 }
             },
@@ -31,12 +33,11 @@ module.exports = class Category {
                             updatedAt: new Date()
                         },
                         dependency: [{
-                            // if the category exists return an error
                             options: {
                                 where: {name: args.name}
                             },
-                            error: true,
-                            message: `Category "${args.name}" is exists`
+                            errorIfElementExists: true,
+                            customErrorMessage: `Category "${args.name}" is exists`
                         }]
                     })
                 },
@@ -48,15 +49,16 @@ module.exports = class Category {
                             updatedAt: new Date()
                         },
                         dependency: [
-                            // if the updated category does not exist, return an error
-                            {options: args.categoryId},
-                            // if the new category name exists, return an error
+                            {
+                                options: args.categoryId,
+                                errorIfElementDoesNotExist: true
+                            },
                             {
                                 options: {
                                     where: {name: args.name}
                                 },
-                                error: true,
-                                message: `"${args.name}" is used`
+                                errorIfElementExists: true,
+                                customErrorMessage: `"${args.name}" is used`
                             }
                         ]
                     })

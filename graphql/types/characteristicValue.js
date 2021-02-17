@@ -11,17 +11,25 @@ module.exports = class CharacteristicValue {
                             valueId: args.valueId,
                         },
                         dependency: [
-                            {options: args.valueId, table: 'Value'},
-                            {options: args.characteristicId, table: 'Characteristic'},
                             {
-                            options: {
-                                where: {
-                                    characteristicId: args.characteristicId,
-                                    valueId: args.valueId,
-                                }
+                                options: args.valueId,
+                                tableName: 'Value',
+                                errorIfElementDoesNotExist: true,
                             },
-                            error: true,
-                            message: 'Value added to this characteristic'
+                            {
+                                options: args.characteristicId,
+                                tableName: 'Characteristic',
+                                errorIfElementDoesNotExist: true,
+                            },
+                            {
+                                options: {
+                                    where: {
+                                        characteristicId: args.characteristicId,
+                                        valueId: args.valueId,
+                                    }
+                                },
+                                errorIfElementExists: true,
+                                customErrorMessage: 'Value added to this characteristic'
                         }]
                     });
                     return models.Characteristic.smartSearch({options: args.characteristicId})

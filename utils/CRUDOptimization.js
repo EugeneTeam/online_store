@@ -23,22 +23,11 @@ class CRUDOptimisation extends Model {
         throw new ApolloError('Wrong value type', '400');
     }
 
-    /**
-     * Поиск одного или множественное количество item
-     * @param {object|string|number} options
-     * {object} options - должне содержать where для поиска
-     * {string|number} - поиск по первичному ключу методом findByPk
-     * @param {boolean} error - при true вернет ошибку если item не будет найден
-     * @param {boolean} useFindAll - использует метод findAll и возвращает массив items
-     * @param {boolean} count - при true используется метод findAndCountAll (необходимо для пагинации)
-     * @param {string} message - при error: true будет возвращать пользовательский текст ошибки
-     * @returns {Promise<*>}
-     */
-    static async smartSearch({options, error = false, useFindAll= false, count = false, message = ''}) {
-        const item = await this[this.returnMethodByValueType(options, useFindAll, count)](options);
+    static async smartSearch({options, returnErrorIfItemNotFound = true, returnsItemsList= false, returnsCountAndList = false, customErrorMessage = ''}) {
+        const item = await this[this.returnMethodByValueType(options, returnsItemsList, returnsCountAndList)](options);
 
-        if (error && !item) {
-            throw new ApolloError(message ? message : `${this.name} not found`)
+        if (returnErrorIfItemNotFound && !item) {
+            throw new ApolloError(customErrorMessage ? customErrorMessage : `${this.name} not found`)
         }
         return item;
     }
@@ -79,15 +68,6 @@ class CRUDOptimisation extends Model {
         });
     }
 
-    /**
-     *
-     * @param {array} dependency - проверка зависимостей
-     * @param {object|string|number} dependency.options
-     * @param {string} dependency.table
-     * @param {boolean} dependency.error
-     * @param {string} dependency.message
-     * @returns {Promise<unknown>}
-     */
     static async checkDependencies(dependency) {
 
         if (!Array.isArray(dependency)) {
@@ -98,14 +78,14 @@ class CRUDOptimisation extends Model {
             try {
                 const result = [];
                 if (dependency.length) {
-                    for (const {options, table, error, message} of dependency) {
-                        const item = await (table ? this.models[table] : this).smartSearch({options});
-                        if (error && item) {
-                            reject(new ApolloError(message ? message : `${table || this.name} id:${item.id} is exists`, '400'));
+                    for (const {options, tableName, errorIfElementExists, errorIfElementDoesNotExist, customErrorMessage} of dependency) {
+                        const item = await (tableName ? this.models[tableName] : this).smartSearch({options});
+                        if (errorIfElementExists && item) {
+                            reject(new ApolloError(customErrorMessage ? customErrorMessage : `${tableName || this.name} is exists`, '400'));
                         }
 
-                        if (!error && !item) {
-                            reject(new ApolloError(message ? message : `${table || this.name} not found`, '404'));
+                        if (errorIfElementDoesNotExist && !item) {
+                            reject(new ApolloError(customErrorMessage ? customErrorMessage : `${tableName || this.name} not found`, '404'));
                         }
                         result.push({
                             options,
@@ -121,17 +101,9 @@ class CRUDOptimisation extends Model {
     }
 
     /**
-     *
-     * @param {object} updatedItem - структура объекта зависит от используемой модели
-     * @param {object} options
-     * {object} options - должне содержать where для поиска
-     * {string|number} - поиск по первичному ключу методом findByPk
-     * @param {array} dependency - проверка зависимостей
-     * @param {string} table - имя таблицы в которой будет создана заись(поумолчанию текущая модель)
-     * @param {transaction} transaction - sequelize transaction для обеспечения безопасного обновления item в количестве > 1
-     * @returns {Promise<*>}
+
      */
-    static async updateItem({updatedItem, options, dependency = [], table = '', transaction = null}) {
+    static async updateItem({updatedItem, options, dependency = [], tableName = '', transaction = null}) {
         if (!options) {
             throw new Error('options is required');
         }
@@ -141,7 +113,7 @@ class CRUDOptimisation extends Model {
         if (dependency.length) {
             await this.checkDependencies(dependency);
         }
-        const item = await this.models[table ? table : this.name].smartSearch({
+        const item = await this.models[tableName ? tableName : this.name].smartSearch({
             options,
             errorIfNotExists: true
         });
@@ -150,14 +122,6 @@ class CRUDOptimisation extends Model {
         })
     }
 
-    /**
-     *
-     * @param {object} options
-     * {object} options - должне содержать where для поиска
-     * {string|number} - поиск по первичному ключу методом findByPk
-     * @param t{transaction} transaction - sequelize transaction для обеспечения безопасного обновления item в количестве > 1
-     * @returns {Promise<string>}
-     */
     static async removeItem({options, transaction = null}) {
         const item = await this.smartSearch({
             options,
@@ -166,7 +130,7 @@ class CRUDOptimisation extends Model {
         if (!item) {
             throw new ApolloError(`${this.name} not found`, '404');
         }
-        await item.destroy({}, {...(transaction ? {transaction} : null)});
+        await item.destroy({...(transaction ? {transaction} : null)});
         return 'success';
     }
 }

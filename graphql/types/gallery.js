@@ -7,9 +7,8 @@ module.exports = class Gallery {
             Query: {
                 getGalleryById: async (obj, args) => {
                     return models.Gallery.smartSearch({
-                        options: args.galleryId,
-                        error: true
-                    })
+                        options: args.galleryId
+                    });
                 },
                 getGalleryList: async (obj, args) => {
                     return models.Gallery.smartSearch({
@@ -18,7 +17,7 @@ module.exports = class Gallery {
                             offset: args.offset || PAGINATION.DEFAULT_OFFSET,
                             include: {model: models.Image}
                         },
-                        count: true
+                        returnsCountAndList: true
                     });
                 }
             },
@@ -39,8 +38,8 @@ module.exports = class Gallery {
                        },
                         dependency: [{
                             options: {where: {name: args.name}},
-                            error: true,
-                            message: `Gallery name ${args.name} is used`
+                            errorIfElementExists: true,
+                            customErrorMessage: `Gallery name ${args.name} is used`
                         }]
                     });
                 },
@@ -53,19 +52,20 @@ module.exports = class Gallery {
                         options: args.galleryId,
                         dependency: [{
                             options: {where: {name: args.name}},
-                            error: true,
-                            message: `Gallery name ${args.name} is used`
+                            errorIfElementExists: true,
+                            customErrorMessage: `Gallery name ${args.name} is used`
                         }]
                     });
                 },
                 removeGallery: async (obj, args) => {
                     return models.Gallery.removeItem({
                         options: args.galleryId
-
-                    })
+                    });
                 },
                 bulkAddImageToGallery: async (obj, {galleryId, imagesIds}) => {
-                    await models.Gallery.smartSearch({options: galleryId, error: true});
+                    await models.Gallery.smartSearch({
+                        options: galleryId
+                    });
                     await models.sequelize.transaction(async transaction => {
                        for (const imageId of imagesIds) {
                            await models.Image.smartSearch({options: imageId, error: true});
@@ -74,8 +74,8 @@ module.exports = class Gallery {
                               transaction,
                               dependency: [{
                                   options: {galleryId, imageId},
-                                  error: true,
-                                  message: `duplicate entry. galleryId:${galleryId}, imageId:${imageId}`
+                                  errorIfElementExists: true,
+                                  customErrorMessage: `duplicate entry. galleryId:${galleryId}, imageId:${imageId}`
                               }]
                            });
                        }
@@ -85,7 +85,7 @@ module.exports = class Gallery {
                             where: {id: galleryId},
                             include: {model: models.Image}
                         }
-                    })
+                    });
                 },
             }
         }

@@ -7,7 +7,9 @@ module.exports = class Image {
         return {
             Query: {
                 getImageById: async(obj, args) => {
-                    return models.Image.smartSearch({options: args.imageId, error: true})
+                    return models.Image.smartSearch({
+                        options: args.imageId
+                    });
                 },
                 getImageList: async(obj, args) => {
                     return models.Image.smartSearch({
@@ -15,8 +17,8 @@ module.exports = class Image {
                             limit: args.limit || PAGINATION.DEFAULT_LIMIT,
                             offset: args.offset || PAGINATION.DEFAULT_OFFSET
                         },
-                        count: true
-                    })
+                        returnsCountAndList: true
+                    });
                 }
             },
             Mutation: {
@@ -35,10 +37,10 @@ module.exports = class Image {
                                     url: args.url,
                                 }
                             },
-                            error: true,
-                            message: `"${args.url}" is used`
+                            errorIfElementExists: true,
+                            customErrorMessage: `"${args.url}" is used`
                         }]
-                    })
+                    });
                 },
                 updateImage: async(obj, args) => {
                     return models.Image.updateItem({
@@ -55,15 +57,15 @@ module.exports = class Image {
                                     url: args.url,
                                 }
                             },
-                            error: true,
-                            message: `"${args.url}" is used`
+                            errorIfElementExists: true,
+                            customErrorMessage: `"${args.url}" is used`
                         }]
                     })
                 },
                 removeImage: async(obj, args) => {
                     return models.Image.removeItem({
                         options: args.imageId
-                    })
+                    });
                 },
                 bulkDeleteImage: async(obj, args) => {
                     return models.Image.destroy({

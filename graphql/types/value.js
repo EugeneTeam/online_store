@@ -7,7 +7,9 @@ module.exports = class Value {
         return {
             Query: {
                 getValueById: async(obj, args) => {
-                    return models.Value.smartSearch({options: args.valueId, error: true})
+                    return models.Value.smartSearch({
+                        options: args.valueId
+                    });
                 },
                 getValueList: async(obj, args) => {
                     return models.Value.smartSearch({
@@ -15,8 +17,8 @@ module.exports = class Value {
                             limit: args.limit || PAGINATION.DEFAULT_LIMIT,
                             offset: args.offset || PAGINATION.DEFAULT_OFFSET
                         },
-                        count: true
-                    })
+                        returnsCountAndList: true
+                    });
                 }
             },
             Mutation: {
@@ -29,10 +31,10 @@ module.exports = class Value {
                         },
                         dependency: [{
                             options: {where: {value: args.value}},
-                            error: true,
-                            message: `Value "${args.value}" is exists`
+                            errorIfElementExists: true,
+                            customErrorMessage: `Value "${args.value}" is exists`
                         }]
-                    })
+                    });
                 },
                 updateValue: async(obj, args) => {
                     return models.Value.updateItem({
@@ -42,21 +44,21 @@ module.exports = class Value {
                             updatedAt: new Date()
                         },
                         dependency: [
-                            {options: args.valueId},
+                            {options: args.valueId, errorIfElementDoesNotExist: true},
                             {
                                 options: {
                                     where: {value: args.value}
                                 },
-                                error: true,
-                                message: `Value "${args.value}" is exists`
+                                errorIfElementExists: true,
+                                customErrorMessage: `Value "${args.value}" is exists`
                             }
                         ]
-                    })
+                    });
                 },
                 removeValue: async(obj, args) => {
                     return models.Value.removeItem({
                         options: args.valueId
-                    })
+                    });
                 },
                 bulkDeleteValue: async(obj, args) => {
                     return models.Value.destroy({

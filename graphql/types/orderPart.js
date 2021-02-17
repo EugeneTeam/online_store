@@ -11,7 +11,7 @@ module.exports = class OrderPart {
                             ...(args.limit ? {limit: args.limit || PAGINATION.DEFAULT_LIMIT} : null),
                             ...(args.offset ? {offset: args.offset || PAGINATION.DEFAULT_OFFSET} : null),
                         },
-                        count: true
+                        returnsCountAndList: true
                     });
                 },
             },
@@ -36,23 +36,28 @@ module.exports = class OrderPart {
                                         userId: user.id,
                                     }
                                 },
-                                error: true,
-                                message: 'The product has already been added to the cart'
+                                errorIfElementExists: true,
+                                customErrorMessage: 'The product has already been added to the cart'
                             }
                         ]
                     });
                 },
-                updateOrderPart: async (obj, args, ) => {
+                updateOrderPart: async (obj, args) => {
                     return models.OrderPart.updateItem({
                         options: args.orderPartId,
                         updatedItem: {
                             quantity: args.quantity,
                         },
-                        dependency: [{options: args.orderPartId}]
+                        dependency: [{
+                            options: args.orderPartId,
+                            errorIfElementDoesNotExist: true
+                        }]
                     });
                 },
-                removeOrderPart: async (obj, args, {user}) => {
-                    return models.OrderPart.removeItem({options: args.orderPartId});
+                removeOrderPart: async (obj, args) => {
+                    return models.OrderPart.removeItem({
+                        options: args.orderPartId
+                    });
                 }
             }
         }

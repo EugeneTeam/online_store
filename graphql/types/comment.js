@@ -18,7 +18,7 @@ module.exports = class Comment {
                             ...(args.limit ? {limit: args.limit || PAGINATION.DEFAULT_LIMIT} : null),
                             ...(args.offset ? {offset: args.offset || PAGINATION.DEFAULT_OFFSET} : null)
                         },
-                        count: true
+                        returnsCountAndList: true
                     });
                 }
             },
@@ -43,7 +43,7 @@ module.exports = class Comment {
                             createdAt: new Date(),
                             updatedAt: new Date(),
                         }
-                    })
+                    });
                 },
                 replyToComment: async (obj, {replyComment}, {user}) => {
                     return models.Comment.createItem({
@@ -59,12 +59,15 @@ module.exports = class Comment {
                             updatedAt: new Date(),
                         },
                         dependency: [
-                            {options: replyComment.parentId}
+                            {
+                                options: replyComment.parentId,
+                                errorIfElementDoesNotExist: true
+                            }
                         ]
-                    })
+                    });
                 },
                 removeComment: async (obj, {commentId}) => {
-                    return models.Comment.removeItem({options: commentId})
+                    return models.Comment.removeItem({options: commentId});
                 },
             }
         };

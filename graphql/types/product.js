@@ -1,13 +1,14 @@
 const models = require('../../models');
 const {PAGINATION} = require('../../config/constants');
-const {Op} = require('sequelize');
 
 module.exports = class Product {
     static resolver() {
         return {
             Query: {
                 getProductById: async(obj, args) => {
-                    return models.Product.smartSearch({options: args.productId, error: true})
+                    return models.Product.smartSearch({
+                        options: args.productId
+                    });
                 },
                 getProductList: async(obj, args) => {
                     return models.Category.smartSearch({
@@ -15,8 +16,8 @@ module.exports = class Product {
                             limit: args.limit || PAGINATION.DEFAULT_LIMIT,
                             offset: args.offset || PAGINATION.DEFAULT_OFFSET
                         },
-                        count: true
-                    })
+                        returnsCountAndList: true
+                    });
                 },
                 getProductListByFilter: async (obj, args) => {
                     return models.Product.getProductByFilter(args);
@@ -38,13 +39,25 @@ module.exports = class Product {
                                     name: args.name
                                 }
                             },
-                            error: true
+                            errorIfElementExists: true
                         },
-                        {options: args.categoryId, table: 'Category'},
-                        {options: args.galleryId, table: 'Gallery'},
+                        {
+                            options: args.categoryId,
+                            tableName: 'Category',
+                            errorIfElementDoesNotExist: true
+                        },
+                        {
+                            options: args.galleryId,
+                            tableName: 'Gallery',
+                            errorIfElementDoesNotExist: true
+                        },
                     ]
                     if (args.discountId) {
-                        dependency.push({options: args.discountId, table: 'Discount'});
+                        dependency.push({
+                            options: args.discountId,
+                            tableName: 'Discount',
+                            errorIfElementDoesNotExist: true
+                        });
                     }
                     return models.Product.createItem({
                         item: {
@@ -59,7 +72,7 @@ module.exports = class Product {
                             updatedAt: new Date(),
                         },
                         dependency
-                    })
+                    });
                 },
                 updateProduct: async (obj, args) => {
                     const dependency = []
@@ -70,18 +83,30 @@ module.exports = class Product {
                                     name: args.name
                                 }
                             },
-                            error: true,
-                            message: `Name "${args.name}" is used`
+                            errorIfElementExists: true,
+                            customErrorMessage: `Name "${args.name}" is used`
                         });
                     }
                     if (args.discountId) {
-                        dependency.push({options: args.discountId, table: 'Discount'});
+                        dependency.push({
+                            options: args.discountId,
+                            tableName: 'Discount',
+                            errorIfElementDoesNotExist: true
+                        });
                     }
                     if (args.categoryId) {
-                        dependency.push({options: args.categoryId, table: 'Category'});
+                        dependency.push({
+                            options: args.categoryId,
+                            tableName: 'Category',
+                            errorIfElementDoesNotExist: true
+                        });
                     }
                     if (args.galleryId) {
-                        dependency.push({options: args.galleryId, table: 'Gallery'});
+                        dependency.push({
+                            options: args.galleryId,
+                            tableName: 'Gallery',
+                            errorIfElementDoesNotExist: true
+                        });
                     }
                     return models.Product.updateItem({
                         options: args.productId,
@@ -95,12 +120,12 @@ module.exports = class Product {
                             updatedAt: new Date(),
                         },
                         dependency
-                    })
+                    });
                 },
                 removeProduct: async (obj, args) => {
                     return models.Product.removeItem({
                         options: args.productId
-                    })
+                    });
                 }
             },
         }

@@ -6,7 +6,9 @@ module.exports = class DeliveryType {
         return {
             Query: {
                 getPaymentTypeById: async (obj, args) => {
-                    return models.PaymentType.smartSearch({options: args.paymentTypeId, error: true});
+                    return models.PaymentType.smartSearch({
+                        options: args.paymentTypeId
+                    });
                 },
                 getPaymentTypeList: async (obj, args) => {
                     return models.PaymentType.smartSearch({
@@ -14,7 +16,7 @@ module.exports = class DeliveryType {
                             ...(args.limit ? {limit: args.limit || PAGINATION.DEFAULT_LIMIT} : null),
                             ...(args.offset ? {offset: args.offset || PAGINATION.DEFAULT_OFFSET} : null),
                         },
-                        count: true
+                        returnsCountAndList: true
                     });
                 }
             },
@@ -30,8 +32,8 @@ module.exports = class DeliveryType {
                         dependency: [
                             {
                                 options: {where: {name: args.name}},
-                                error: true,
-                                message: `${args.name} is exists`
+                                errorIfElementExists: true,
+                                customErrorMessage: `${args.name} is exists`
                             }
                         ]
                     });
@@ -40,14 +42,14 @@ module.exports = class DeliveryType {
                     return models.PaymentType.updateItem({
                         options: args.paymentTypeId,
                         updatedItem: {
-                            status: args.status,
                             ...(args.name ? {name: args.name} : null),
+                            status: args.status,
                             updatedAt: new Date()
                         },
                         dependency: args.name ? [{
                             options: {where: {name: args.name}},
-                            error: true,
-                            message: `${args.name} is exists`
+                            errorIfElementExists: true,
+                            customErrorMessage: `${args.name} is exists`
                         }] : []
                     });
                 },

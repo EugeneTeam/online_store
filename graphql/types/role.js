@@ -11,11 +11,13 @@ module.exports = class Role {
                             limit: args.limit || DEFAULT_LIMIT,
                             offset: args.offset || DEFAULT_OFFSET
                         },
-                        count: true
-                    })
+                        returnsCountAndList: true
+                    });
                 },
                 getRoleById: async (obj, args) => {
-                    return  models.Role.smartSearch({options: args.roleId, error: true});
+                    return  models.Role.smartSearch({
+                        options: args.roleId
+                    });
                 }
             },
             Role: {
@@ -27,10 +29,10 @@ module.exports = class Role {
                         item: {name: args.name},
                         dependency: [{
                             options: {where: {name: args.name}},
-                            error: true,
-                            message: `Role ${args.name} is exists`
+                            errorIfElementExists: true,
+                            customErrorMessage: `Role ${args.name} is exists`
                         }]
-                    })
+                    });
                 },
                 removeRole: async (obj, args, context) => {
                     return models.Role.removeItem({
@@ -43,11 +45,10 @@ module.exports = class Role {
                         updatedItem: {name: args.name},
                         dependency: [{
                             options: {where: {name: args.name}},
-                            error: true,
-                            message: `Role ${args.name} is used`
+                            errorIfElementExists: true,
+                            customErrorMessage: `Role ${args.name} is used`
                         }]
-
-                    })
+                    });
                 }
             }
         }

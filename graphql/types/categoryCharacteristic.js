@@ -11,20 +11,30 @@ module.exports = class CategoryCharacteristic {
                             categoryId: args.categoryId,
                         },
                         dependency: [
-                            {options: args.categoryId, table: 'Category'},
-                            {options: args.characteristicId, table: 'Characteristic'},
                             {
-                            options: {
-                                where: {
-                                    characteristicId: args.characteristicId,
-                                    categoryId: args.categoryId,
-                                }
+                                options: args.categoryId,
+                                tableName: 'Category',
+                                errorIfElementDoesNotExist: true
                             },
-                            error: true,
-                            message: 'Characteristic added to this category'
-                        }]
+                            {
+                                options: args.characteristicId,
+                                tableName: 'Characteristic',
+                                errorIfElementDoesNotExist: true
+                            },
+                            {
+                                options: {
+                                    where: {
+                                        characteristicId: args.characteristicId,
+                                        categoryId: args.categoryId,
+                                    }
+                                },
+                                errorIfElementExists: true,
+                                customErrorMessage: 'Characteristic added to this category'
+                            }]
                     });
-                    return models.Category.smartSearch({options: args.categoryId})
+                    return models.Category.smartSearch({
+                        options: args.categoryId
+                    });
                 },
                 addCharacteristicsForCategory: async (obj, args) => {
                     if (args.characteristicIds.length) {
@@ -37,18 +47,26 @@ module.exports = class CategoryCharacteristic {
                                     },
                                     transaction,
                                     dependency: [
-                                        {options: args.categoryId, table: 'Category'},
-                                        {options: id, table: 'Characteristic'},
                                         {
-                                        options: {
-                                            where: {
-                                                characteristicId: id,
-                                                categoryId: args.categoryId,
-                                            }
+                                            options: args.categoryId,
+                                            tableName: 'Category',
+                                            errorIfElementDoesNotExist: true
                                         },
-                                        error: true,
-                                        message: `Characteristic (Id:${id}) added to this category`
-                                    }]
+                                        {
+                                            options: id,
+                                            tableName: 'Characteristic',
+                                            errorIfElementDoesNotExist: true
+                                        },
+                                        {
+                                            options: {
+                                                where: {
+                                                    characteristicId: id,
+                                                    categoryId: args.categoryId,
+                                                }
+                                            },
+                                            errorIfElementExists: true,
+                                            customErrorMessage: `Characteristic (Id:${id}) added to this category`
+                                        }]
                                 })
                             }
                         })

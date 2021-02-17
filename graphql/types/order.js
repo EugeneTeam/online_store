@@ -7,21 +7,22 @@ module.exports = class Order {
         return {
             Query: {
                 getOrderById: async (obj, args) => {
-                    return models.Order.smartSearch({options: args.orderId, error: true});
+                    return models.Order.smartSearch({
+                        options: args.orderId
+                    });
                 },
                 getOrderList: async (obj, args, {user}) => {
                     return models.Order.smartSearch({
                         options: {
                             where: {
                                 userId: user.isCustomer ? user.id : args.userId,
-                                // filter by status
                                 ...(args.status ? {status: args.status} : null)
                             },
                             ...(args.limit ? {limit: args.limit || PAGINATION.DEFAULT_LIMIT} : null),
                             ...(args.offset ? {offset: args.offset || PAGINATION.DEFAULT_OFFSET} : null),
                         },
-                        count: true
-                    })
+                        returnsCountAndList: true
+                    });
                 },
             },
             Order: {
@@ -33,14 +34,19 @@ module.exports = class Order {
             Mutation: {
                 updateOrder: async (obj, {orderInput, orderId}) => {
                     return await models.sequelize.transaction(async transaction => {
-                        const order = await models.Order.smartSearch({options: orderId, error: true});
+                        const order = await models.Order.smartSearch({
+                            options: orderId
+                        });
                         await order.update({
                             ...(orderInput.deliveryTypeId ? {deliveryTypeId: orderInput.deliveryTypeId} : null),
                             ...(orderInput.paymentTypeId ? {paymentTypeId: orderInput.paymentTypeId} : null),
                             ...(orderInput.status ? {status: orderInput.status} : null)
                         });
 
-                        const partsOrder = await models.OrderOrderPart.smartSearch({options: {orderId}, useFindAll: true});
+                        const partsOrder = await models.OrderOrderPart.smartSearch({
+                            options: {orderId},
+                            returnsItemsList: true
+                        });
 
                         if (orderInput.partsOrder.length) {
                             for (const partId of orderInput.partsOrder) {
@@ -54,7 +60,11 @@ module.exports = class Order {
                                             orderPartId: partId
                                         },
                                         dependency: [
-                                            {options: partId, table: 'OrderPart'}
+                                            {
+                                                options: partId,
+                                                tableName: 'OrderPart',
+                                                errorIfElementDoesNotExist: true
+                                            }
                                         ],
                                         transaction
                                     });
@@ -96,7 +106,11 @@ module.exports = class Order {
                                 updatedAt: new Date(),
                             },
                             dependency: [
-                                {options: orderInput.deliveryTypeId, table: 'DeliveryType'},
+                                {
+                                    options: orderInput.deliveryTypeId,
+                                    tableName: 'DeliveryType',
+                                    errorIfElementDoesNotExist: true
+                                },
                                 {
                                     options: {
                                         where: {
@@ -104,11 +118,15 @@ module.exports = class Order {
                                             status: 'INACTIVE'
                                         }
                                     },
-                                    table: 'DeliveryType',
-                                    error: true,
-                                    message: 'This type of delivery is disabled'
+                                    tableName: 'DeliveryType',
+                                    errorIfElementExists: true,
+                                    customErrorMessage: 'This type of delivery is disabled'
                                 },
-                                {options: orderInput.paymentTypeId, table: 'PaymentType'},
+                                {
+                                    options: orderInput.paymentTypeId,
+                                    tableName: 'PaymentType',
+                                    errorIfElementDoesNotExist: true
+                                },
                                 {
                                     options: {
                                         where: {
@@ -116,9 +134,9 @@ module.exports = class Order {
                                             status: 'INACTIVE'
                                         }
                                     },
-                                    table: 'PaymentType',
-                                    error: true,
-                                    message: 'This type of payment is disabled'
+                                    tableName: 'PaymentType',
+                                    errorIfElementExists: true,
+                                    customErrorMessage: 'This type of payment is disabled'
                                 },
                             ]
                         });
@@ -131,12 +149,16 @@ module.exports = class Order {
                                         orderId: order.id,
                                         orderPartId
                                     },
-                                    dependency: [{options: orderPartId, table: 'OrderPart'}]
-                                })
+                                    dependency: [{
+                                        options: orderPartId,
+                                        tableName: 'OrderPart',
+                                        errorIfElementDoesNotExist: true
+                                    }]
+                                });
                             }
                         }
                         return order;
-                    })
+                    });
                 },
             }
         };

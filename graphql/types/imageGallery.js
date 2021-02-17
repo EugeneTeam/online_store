@@ -11,20 +11,30 @@ module.exports = class ImageGallery {
                             galleryId: args.galleryId,
                         },
                         dependency: [
-                            {options: args.galleryId, table: 'Gallery'},
-                            {options: args.imageId, table: 'Image'},
                             {
-                            options: {
-                                where: {
-                                    imageId: args.imageId,
-                                    galleryId: args.galleryId,
-                                }
+                                options: args.galleryId,
+                                tableName: 'Gallery',
+                                errorIfElementDoesNotExist: true
                             },
-                            error: true,
-                            message: 'Image added to this gallery'
-                        }, ]
+                            {
+                                options: args.imageId,
+                                tableName: 'Image',
+                                errorIfElementDoesNotExist: true
+                            },
+                            {
+                                options: {
+                                    where: {
+                                        imageId: args.imageId,
+                                        galleryId: args.galleryId,
+                                    }
+                                },
+                                errorIfElementExists: true,
+                                customErrorMessage: 'Image added to this gallery'
+                            }]
                     });
-                    return models.Gallery.smartSearch({options: args.galleryId})
+                    return models.Gallery.smartSearch({
+                        options: args.galleryId
+                    });
                 },
                 addImagesForGallery: async (obj, args) => {
                     if (args.imageIds.length) {
@@ -37,23 +47,33 @@ module.exports = class ImageGallery {
                                     },
                                     transaction,
                                     dependency: [
-                                        {options: args.galleryId, table: 'Gallery'},
-                                        {options: id, table: 'Image'},
                                         {
-                                        options: {
-                                            where: {
-                                                imageId: id,
-                                                galleryId: args.galleryId,
-                                            }
+                                            options: args.galleryId,
+                                            tableName: 'Gallery',
+                                            errorIfElementDoesNotExist: true
                                         },
-                                        error: true,
-                                        message: `Image (Id:${id}) added to this gallery`
-                                    }]
+                                        {
+                                            options: id,
+                                            tableName: 'Image',
+                                            errorIfElementDoesNotExist:true
+                                        },
+                                        {
+                                            options: {
+                                                where: {
+                                                    imageId: id,
+                                                    galleryId: args.galleryId,
+                                                }
+                                            },
+                                            errorIfElementExists: true,
+                                            customErrorMessage: `Image (Id:${id}) added to this gallery`
+                                        }]
                                 })
                             }
-                        })
+                        });
                     }
-                    return models.Gallery.smartSearch({options: args.galleryId})
+                    return models.Gallery.smartSearch({
+                        options: args.galleryId
+                    });
                 }
             }
         };

@@ -55,8 +55,8 @@ module.exports = class User {
                                         status: args.status
                                     }
                                 },
-                                error: true,
-                                message: args.status === 'BANNED' ? 'User is already blocked' : 'User is already unlocked'
+                                errorIfElementExists: true,
+                                customErrorMessage: args.status === 'BANNED' ? 'User is already blocked' : 'User is already unlocked'
                             },
                         ]
                     });
@@ -144,8 +144,16 @@ module.exports = class User {
                             updatedAt: new Date()
                         },
                         dependency: [
-                            {options:{where: {email: args.email}}, message: 'Email is used', error: true},
-                            {options:{where: {phone: args.phone}}, message: 'Phone is used', error: true}
+                            {
+                                options: {where: {email: args.email}},
+                                customErrorMessage: 'Email is used',
+                                errorIfElementExists: true
+                            },
+                            {
+                                options: {where: {phone: args.phone}},
+                                customErrorMessage: 'Phone is used',
+                                errorIfElementExists: true
+                            }
                         ]
                     });
 

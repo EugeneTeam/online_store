@@ -7,7 +7,9 @@ module.exports = class Discount {
         return  {
             Query: {
                 getDiscountById: async (obj, args) => {
-                    return models.Discount.smartSearch({options: args.discountId, error: true});
+                    return models.Discount.smartSearch({
+                        options: args.discountId
+                    });
                 },
                 getDiscountList: async (obj, args) => {
                     return models.Discount.smartSearch({
@@ -15,8 +17,8 @@ module.exports = class Discount {
                             limit: args.limit || PAGINATION.DEFAULT_LIMIT,
                             offset: args.offset || PAGINATION.DEFAULT_OFFSET,
                         },
-                        count: true
-                    })
+                        returnsCountAndList: true
+                    });
                 }
             },
             Mutation: {
@@ -38,10 +40,10 @@ module.exports = class Discount {
                                         expiredAt: args.expiredAt,
                                     }
                                 },
-                                error: true
+                                errorIfElementExists: true
                             }
                         ]
-                    })
+                    });
                 },
                 updateDiscount: async (obj, args) => {
                     return models.Discount.updateItem({
@@ -62,15 +64,15 @@ module.exports = class Discount {
                                         expiredAt: args.expiredAt,
                                     }
                                 },
-                                error: true
+                                errorIfElementExists: true
                             }
                         ]
-                    })
+                    });
                 },
                 removeDiscount: async (obj, args) => {
                     return models.Discount.removeItem({
                         options: args.discountId
-                    })
+                    });
                 }
             }
         }

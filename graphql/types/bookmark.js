@@ -5,13 +5,13 @@ module.exports = class Bookmark {
     static resolver() {
         return {
             Query: {
-                getBookmarkListByUserId: async (obj, args, context) => {
+                getBookmarkListByUserId: async (obj, args) => {
                     return models.Bookmark.smartSearch({
                         options: {
                             ...(args.limit ? {limit: args.limit || PAGINATION.DEFAULT_LIMIT} : null),
                             ...(args.offset ? {offset: args.offset || PAGINATION.DEFAULT_OFFSET} : null),
                         },
-                        count: true
+                        returnsCountAndList: true
                     })
                 },
             },
@@ -29,7 +29,11 @@ module.exports = class Bookmark {
                             updatedAt: new Date(),
                         },
                         dependency: [
-                            {options: args.productId, table: 'Product'},
+                            {
+                                options: args.productId,
+                                tableName: 'Product',
+                                errorIfElementDoesNotExist: true
+                            },
                             {
                                 options: {
                                     where: {
@@ -37,7 +41,7 @@ module.exports = class Bookmark {
                                         productId: args.productId,
                                     }
                                 },
-                                error: true
+                                errorIfElementExists: true
                             }
                         ]
                     })

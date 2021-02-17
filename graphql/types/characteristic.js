@@ -7,7 +7,9 @@ module.exports = class Characteristic {
         return {
             Query: {
                 getCharacteristicById: async(obj, args) => {
-                    return models.Characteristic.smartSearch({options: args.characteristicId, error: true})
+                    return models.Characteristic.smartSearch({
+                        options: args.characteristicId
+                    });
                 },
                 getCharacteristicList: async(obj, args) => {
                     return models.Characteristic.smartSearch({
@@ -15,8 +17,8 @@ module.exports = class Characteristic {
                             limit: args.limit || PAGINATION.DEFAULT_LIMIT,
                             offset: args.offset || PAGINATION.DEFAULT_OFFSET
                         },
-                        count: true
-                    })
+                        returnsCountAndList: true
+                    });
                 }
             },
             Characteristic:{
@@ -34,8 +36,8 @@ module.exports = class Characteristic {
                             options: {
                                 where: {name: args.name}
                             },
-                            error: true,
-                            message: `Characteristic "${args.name}" is exists`
+                            errorIfElementExists: true,
+                            customErrorMessage: `Characteristic "${args.name}" is exists`
                         }]
                     })
                 },
@@ -47,21 +49,24 @@ module.exports = class Characteristic {
                             updatedAt: new Date()
                         },
                         dependency: [
-                            {options: args.characteristicId},
+                            {
+                                options: args.characteristicId,
+                                errorIfElementDoesNotExist: true
+                            },
                             {
                                 options: {
                                     where: {name: args.name}
                                 },
-                                error: true,
-                                message: `"${args.name}" is used`
+                                errorIfElementExists: true,
+                                customErrorMessage: `"${args.name}" is used`
                             }
                         ]
-                    })
+                    });
                 },
                 removeCharacteristic: async(obj, args) => {
                     return models.Characteristic.removeItem({
                         options: args.characteristicId
-                    })
+                    });
                 },
                 bulkDeleteCharacteristic: async(obj, args) => {
                     return models.Characteristic.destroy({

@@ -6,7 +6,9 @@ module.exports = class Permission {
         return {
             Query: {
                 getPermissionById: async (obj, args) => {
-                    return models.Permission.smartSearch({options: args.permissionId, error: true})
+                    return models.Permission.smartSearch({
+                        options: args.permissionId
+                    });
                 },
                 getPermissionList: async (obj, args) => {
                     return models.Permission.smartSearch({
@@ -14,8 +16,8 @@ module.exports = class Permission {
                             limit: args.limit || PAGINATION.DEFAULT_LIMIT,
                             offset: args.offset || PAGINATION.DEFAULT_OFFSET
                         },
-                        count: true
-                    })
+                        returnsCountAndList: true
+                    });
                 }
             },
             Mutation: {
@@ -30,10 +32,10 @@ module.exports = class Permission {
                                     name: args.name,
                                 }
                             },
-                            error: true,
-                            message: `"${args.name}" is used`
+                            errorIfElementExists: true,
+                            customErrorMessage: `"${args.name}" is used`
                         }]
-                    })
+                    });
                 },
                 updatePermission: async (obj, args) => {
                     return models.Permission.updateItem({
@@ -47,15 +49,15 @@ module.exports = class Permission {
                                     name: args.name,
                                 }
                             },
-                            error: true,
-                            message: `"${args.name}" is used`
+                            errorIfElementExists: true,
+                            customErrorMessage: `"${args.name}" is used`
                         }]
-                    })
+                    });
                 },
                 removePermission: async (obj, args) => {
                     return models.Permission.removeItem({
                         options: args.permissionId
-                    })
+                    });
                 }
             }
         }

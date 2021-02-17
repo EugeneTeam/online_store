@@ -1,6 +1,4 @@
 const models = require('../../models');
-const {PAGINATION} = require('../../config/constants');
-const {Op} = require('sequelize');
 
 module.exports = class FeatureProduct {
     static resolver() {
@@ -12,7 +10,9 @@ module.exports = class FeatureProduct {
             },
             Mutation: {
                 updateCharacteristicInProduct: async (obj, args) => {
-                    const product = await models.Product.smartSearch({options: args.productId, error: true});
+                    const product = await models.Product.smartSearch({
+                        options: args.productId
+                    });
                     return models.FeatureProduct.updateItem({
                         options: {
                             where: {
@@ -27,33 +27,38 @@ module.exports = class FeatureProduct {
                             valueId: args.newValueId
                         },
                         dependency: [
-                            // if characteristic exists
-                            {options: args.newCharacteristicId, table: 'Characteristic'},
-                            // if characteristic available in this category
                             {
-                                table: 'CategoryCharacteristic',
+                                options: args.newCharacteristicId,
+                                tableName: 'Characteristic',
+                                errorIfElementDoesNotExist: true
+                            },
+                            {
+                                tableName: 'CategoryCharacteristic',
                                 options: {
                                     where: {
                                         characteristicId: args.newCharacteristicId,
                                         categoryId: product.categoryId
                                     },
                                 },
-                                message: 'Characteristic not available for this product'
+                                errorIfElementDoesNotExist: true,
+                                customErrorMessage: 'Characteristic not available for this product'
                             },
-                            // if value exists
-                            {options: args.newValueId, table: 'Value'},
-                            // if value available in this characteristic
                             {
-                                table: 'CharacteristicValue',
+                                options: args.newValueId,
+                                tableName: 'Value',
+                                errorIfElementDoesNotExist: true,
+                            },
+                            {
+                                tableName: 'CharacteristicValue',
                                 options: {
                                     where: {
                                         characteristicId: args.characteristicId,
                                         valueId: args.newValueId
                                     }
                                 },
-                                message: 'The value is not valid for this characteristic'
+                                errorIfElementDoesNotExist: true,
+                                customErrorMessage: 'The value is not valid for this characteristic'
                             },
-                            // if this property is not added to this product
                             {
                                 options: {
                                     where: {
@@ -62,14 +67,16 @@ module.exports = class FeatureProduct {
                                         valueId: args.newValueId,
                                     }
                                 },
-                                error: true,
-                                message: 'The product has these properties'
+                                errorIfElementExists: true,
+                                customErrorMessage: 'The product has these properties'
                             }
                         ]
-                    })
+                    });
                 },
                 addCharacteristicToProduct:  async (obj, args) => {
-                    const product = await models.Product.smartSearch({options: args.productId, error: true});
+                    const product = await models.Product.smartSearch({
+                        options: args.productId
+                    });
                     return models.FeatureProduct.createItem({
                         item: {
                             productId: args.productId,
@@ -77,27 +84,37 @@ module.exports = class FeatureProduct {
                             valueId: args.valueId,
                         },
                         dependency: [
-                            {options: args.characteristicId, table: 'Characteristic'},
                             {
-                                table: 'CategoryCharacteristic',
+                                options: args.characteristicId,
+                                tableName: 'Characteristic',
+                                errorIfElementDoesNotExist: true
+                            },
+                            {
+                                tableName: 'CategoryCharacteristic',
                                 options: {
                                     where: {
                                         characteristicId: args.characteristicId,
                                         categoryId: product.categoryId
                                     },
                                 },
-                                message: 'Characteristic not available for this product'
+                                errorIfElementDoesNotExist: true,
+                                customErrorMessage: 'Characteristic not available for this product'
                             },
-                            {options: args.valueId, table: 'Value'},
                             {
-                                table: 'CharacteristicValue',
+                                options: args.valueId,
+                                tableName: 'Value',
+                                errorIfElementDoesNotExist: true
+                            },
+                            {
+                                tableName: 'CharacteristicValue',
                                 options: {
                                     where: {
                                         characteristicId: args.characteristicId,
                                         valueId: args.valueId
                                     }
                                 },
-                                message: 'The value is not valid for this characteristic'
+                                errorIfElementDoesNotExist: true,
+                                customErrorMessage: 'The value is not valid for this characteristic'
                             },
                             {
                                 options: {
@@ -107,11 +124,11 @@ module.exports = class FeatureProduct {
                                         valueId: args.valueId,
                                     }
                                 },
-                                error: true,
-                                message: 'The product has these properties'
+                                errorIfElementExists: true,
+                                customErrorMessage: 'The product has these properties'
                             }
                         ]
-                    })
+                    });
                 },
                 removeCharacteristicFromProduct: async (obj, args) => {
                     return models.FeatureProduct.removeItem({
@@ -122,7 +139,7 @@ module.exports = class FeatureProduct {
                                 valueId: args.valueId
                             }
                         }
-                    })
+                    });
                 }
             }
         };
