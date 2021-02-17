@@ -127,7 +127,7 @@ module.exports = class User {
                     return true;
                 },
                 registration: async (obj, args) => {
-                    checkFields(args, ['password', 'firstName', 'lastName', 'email', 'phone']);
+                    checkFields(args, ['password', 'firstName', 'lastName', 'email', 'phone', 'address']);
                     const activationToken = models.User.generateLimitedTimeToken();
                     const newUser = await models.User.createItem({
                         item: {
@@ -156,7 +156,7 @@ module.exports = class User {
                         'completeRegistration',
                         {
                             username: newUser.firstName,
-                            url: `https://www.testurl.com/confirm/email/${activationToken}`
+                            url: `${process.env.URL_TO_VERIFY_YOU_ACCOUNT}${activationToken}`
                         });
                     return newUser.encodeToken();
                 }
@@ -184,11 +184,13 @@ module.exports = class User {
     static typeDefs() {
         return `
             type User {
+                id: Int
                 firstName: String
                 lastName: String
                 phone: String
                 email: String
                 status: String
+                address: String
                 authToken: String
                 role: Role
                 createdAt: String

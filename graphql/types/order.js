@@ -31,27 +31,71 @@ module.exports = class Order {
                 paymentType: order => order.getPaymentType(),
             },
             Mutation: {
+                updateOrder: async (obj, {orderInput, orderId}) => {
+                    return await models.sequelize.transaction(async transaction => {
+                        const order = await models.Order.smartSearch({options: orderId, error: true});
+                        await order.update({
+                            ...(orderInput.deliveryTypeId ? {deliveryTypeId: orderInput.deliveryTypeId} : null),
+                            ...(orderInput.paymentTypeId ? {paymentTypeId: orderInput.paymentTypeId} : null),
+                            ...(orderInput.status ? {status: orderInput.status} : null)
+                        });
+
+                        const partsOrder = await models.OrderOrderPart.smartSearch({options: {orderId}, useFindAll: true});
+
+                        if (orderInput.partsOrder.length) {
+                            for (const partId of orderInput.partsOrder) {
+
+                                const index = partsOrder.findIndex(item => item.orderPartId === partId);
+
+                                if (index === -1) {
+                                    await models.OrderOrderPart.createItem({
+                                        item: {
+                                            orderId,
+                                            orderPartId: partId
+                                        },
+                                        dependency: [
+                                            {options: partId, table: 'OrderPart'}
+                                        ],
+                                        transaction
+                                    });
+                                } else {
+                                    partsOrder.splice(index, 1);
+                                }
+                            }
+
+                            if (partsOrder.length) {
+                                for (const part of partsOrder) {
+                                    await part.destroy({transaction});
+                                    await models.OrderPart.destroy({
+                                        transaction,
+                                        where: {
+                                            id: part.orderPartId
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                        return order;
+                    });
+                },
                 createOrder: async (obj, {orderInput}, {user}) => {
-                    if (!user.isCustomer && !orderInput.userId) {
-                        throw new ApolloError('userId is require', '400');
-                    }
                     return await models.sequelize.transaction(async transaction => {
                         const order = await models.Order.createItem({
                             transaction,
                             item: {
-                                userId: user.isCustomer ? user.id : orderInput.userId,
-                                address: orderInput.address,
-                                firstName: orderInput.firstName,
-                                lastName: orderInput.lastName,
-                                middleName: orderInput.middleName,
-                                phone: orderInput.phone,
+                                userId: user.id,
+                                address: user.address,
+                                firstName: user.firstName,
+                                lastName: user.lastName,
+                                middleName: user.middleName,
+                                phone: user.phone,
+                                paymentTypeId: orderInput.paymentTypeId,
                                 deliveryTypeId: orderInput.deliveryTypeId,
                                 status: 'NEW',
                                 createdAt: new Date(),
                                 updatedAt: new Date(),
                             },
                             dependency: [
-                                {options: user.isCustomer ? user.id : orderInput.userId, table: 'User'},
                                 {options: orderInput.deliveryTypeId, table: 'DeliveryType'},
                                 {
                                     options: {
@@ -64,21 +108,32 @@ module.exports = class Order {
                                     error: true,
                                     message: 'This type of delivery is disabled'
                                 },
+                                {options: orderInput.paymentTypeId, table: 'PaymentType'},
+                                {
+                                    options: {
+                                        where: {
+                                            id: orderInput.paymentTypeId,
+                                            status: 'INACTIVE'
+                                        }
+                                    },
+                                    table: 'PaymentType',
+                                    error: true,
+                                    message: 'This type of payment is disabled'
+                                },
                             ]
                         });
 
-                        const orderPartList = await models.OrderPart.findAll({
-                            userId: user.id
-                        });
-
-                        for (const orderPart of orderPartList) {
-                            await models.OrderOrderPart.createItem({
-                                transaction,
-                                item: {
-                                    orderId: order.id,
-                                    orderPartId: orderPart.id
-                                },
-                            })
+                        if (orderInput.partsOrder.length) {
+                            for (const orderPartId of orderInput.partsOrder) {
+                                await models.OrderOrderPart.createItem({
+                                    transaction,
+                                    item: {
+                                        orderId: order.id,
+                                        orderPartId
+                                    },
+                                    dependency: [{options: orderPartId, table: 'OrderPart'}]
+                                })
+                            }
                         }
                         return order;
                     })
@@ -109,13 +164,15 @@ module.exports = class Order {
                 rows: [Order]
             }
             input OrderInput {
-                userId: Int
                 deliveryTypeId: Int!
-                address: String!
-                firstName: String!
-                lastName: String!
-                middleName: String
-                phone: String!
+                paymentTypeId: Int!
+                partsOrder: [Int]!
+            }
+            input OrderUpdate {
+                deliveryTypeId: Int!
+                paymentTypeId: Int!
+                partsOrder: [Int]!
+                status: String
             }
         `;
     }
@@ -129,6 +186,7 @@ module.exports = class Order {
 
     static mutationTypeDefs() {
         return `
+            updateOrder(orderInput: OrderUpdate!, orderId: Int!): Order
             createOrder(orderInput: OrderInput!): Order
         `;
     }

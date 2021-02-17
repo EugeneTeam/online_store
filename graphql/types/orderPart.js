@@ -24,9 +24,35 @@ module.exports = class OrderPart {
                         item: {
                             productId: args.productId,
                             quantity: args.quantity || 1,
-                            userId: user.id
-                        }
+                            userId: !user.isCustomer && user.id ? args.userId : user.id,
+                            createdAt: new Date(),
+                            updatedAt: new Date(),
+                        },
+                        dependency: [
+                            {
+                                options: {
+                                    where: {
+                                        productId: args.productId,
+                                        userId: user.id,
+                                    }
+                                },
+                                error: true,
+                                message: 'The product has already been added to the cart'
+                            }
+                        ]
                     });
+                },
+                updateOrderPart: async (obj, args, ) => {
+                    return models.OrderPart.updateItem({
+                        options: args.orderPartId,
+                        updatedItem: {
+                            quantity: args.quantity,
+                        },
+                        dependency: [{options: args.orderPartId}]
+                    });
+                },
+                removeOrderPart: async (obj, args, {user}) => {
+                    return models.OrderPart.removeItem({options: args.orderPartId});
                 }
             }
         }
@@ -59,7 +85,9 @@ module.exports = class OrderPart {
 
     static mutationTypeDefs() {
         return `
-            createOrderPart(productId: Int!, quantity: Int): OrderPart
+            updateOrderPart(orderPartId: Int!, quantity: Int!): OrderPart
+            removeOrderPart(orderPartId: Int!): String
+            createOrderPart(productId: Int!, quantity: Int, userId: Int): OrderPart
         `;
     }
 }

@@ -5,6 +5,8 @@
  */
 
 module.exports = {
+    updateOrder: {permissions: ['order update']},
+
     getCommentList: {permissions: ['comment show']},
     removeComment: {permissions: ['comment delete']},
 

@@ -16,15 +16,10 @@ const excludeMethods = [
     'getProductList',
     'getProductListByFilter',
     'getReplyComments',
-    // 'getBookmarkListByUserId',
-    // 'createBookmark',
-    // 'removeBookmark',
-    // 'createComment',
-    // 'replyToComment',
     'getDeliveryTypeList',
-    // 'getOrderPartsListByUserId',
-    // 'createOrderPart',
     'getPaymentTypeList',
+    'updateOrderPart',
+    'removeOrderPart'
 ];
 
 module.exports = new ApolloServer({

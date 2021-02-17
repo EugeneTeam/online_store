@@ -11,9 +11,11 @@ module.exports = {
             phone: '0123456789',
             email: 'some@email.com',
             roleId: 1,
-            status: 'INACTIVE',
+            address: 'some street 25',
+            status: 'ACTIVE',
             passwordHash: await models.User.encryptPassword(process.env.DEFAULT_PASSWORD_FOR_ADMIN),
             authToken: await models.User.generateAuthToken(),
+            isCustomer: false,
         },
         // product manager
         {
@@ -22,9 +24,11 @@ module.exports = {
             phone: '1123456789',
             email: 'productmanager@email.com',
             roleId: 3,
-            status: 'INACTIVE',
+            address: 'some street 25',
+            status: 'ACTIVE',
             passwordHash: await models.User.encryptPassword(process.env.DEFAULT_PASSWORD_FOR_ADMIN),
             authToken: await models.User.generateAuthToken(),
+            isCustomer: false,
         },
         // media manager
         {
@@ -33,9 +37,11 @@ module.exports = {
             phone: '2123456789',
             email: 'mediamanager@email.com',
             roleId: 4,
-            status: 'INACTIVE',
+            address: 'some street 25',
+            status: 'ACTIVE',
             passwordHash: await models.User.encryptPassword(process.env.DEFAULT_PASSWORD_FOR_ADMIN),
             authToken: await models.User.generateAuthToken(),
+            isCustomer: false,
         },
         // feature product manager
         {
@@ -44,9 +50,11 @@ module.exports = {
             phone: '3123456789',
             email: 'featureproductmanager@email.com',
             roleId: 5,
-            status: 'INACTIVE',
+            address: 'some street 25',
+            status: 'ACTIVE',
             passwordHash: await models.User.encryptPassword(process.env.DEFAULT_PASSWORD_FOR_ADMIN),
             authToken: await models.User.generateAuthToken(),
+            isCustomer: false,
         }
     ], {});
   },

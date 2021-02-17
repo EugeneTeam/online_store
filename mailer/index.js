@@ -26,7 +26,6 @@ const sendMail = async (to, subject, text, templateName, data) => {
     })
 }
 
-
 module.exports = {
     sendMail
 }

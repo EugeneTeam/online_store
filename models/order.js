@@ -79,6 +79,9 @@ module.exports = class Order extends CRUDOptimisation {
     this.belongsToMany(models.OrderPart, {
       through: models.OrderOrderPart,
       foreignKey: 'orderId'
-    })
+    });
+    this.belongsTo(models.PaymentType, {
+      foreignKey: 'paymentTypeId'
+    });
   }
 }

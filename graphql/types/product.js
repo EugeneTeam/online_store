@@ -26,7 +26,8 @@ module.exports = class Product {
                 featureProduct: product => product.getFeatureProducts(),
                 category: product => product.getCategory(),
                 gallery: product => product.getGallery(),
-                comments: product => product.getComments()
+                comments: product => product.getComments(),
+                discount: product => product.getDiscount()
             },
             Mutation: {
                 createProduct: async (obj, args) => {
@@ -112,10 +113,10 @@ module.exports = class Product {
                 name: String
                 description: String
                 price: Float
-                discountId: Int
                 rating: Float
                 createdAt: String
                 updatedAt: String
+                discount: [Discount]
                 gallery: Gallery
                 category: Category
                 comments: [Comment]

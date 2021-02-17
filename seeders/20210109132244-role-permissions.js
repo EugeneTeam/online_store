@@ -4,7 +4,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
       const records = [];
       // admin
-      for (let i = 1; i <= 49; i++) {
+      for (let i = 1; i <= 50; i++) {
           records.push({ permissionId: i, roleId: 1})
       }
       // product manager

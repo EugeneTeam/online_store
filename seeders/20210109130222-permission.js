@@ -53,6 +53,7 @@ module.exports = {
         {name: 'paymentType update'},//47
         {name: 'paymentType delete'},//48
         {name: 'paymentType show'},//49
+        {name: 'order update'},//50
         ], {});
   },
 

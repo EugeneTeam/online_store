@@ -50,6 +50,10 @@ module.exports = {
           key: 'id'
         }
       },
+      address: {
+        allowNull: false,
+        type: Sequelize.STRING,
+      },
       isCustomer: {
         allowNull: false,
         type: Sequelize.BOOLEAN,

@@ -66,6 +66,10 @@ module.exports = class User extends CRUDOptimisation {
         type: DataType.BOOLEAN,
         defaultValue: true
       },
+      address: {
+        allowNull: false,
+        type: DataType.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: DataType.DATE
