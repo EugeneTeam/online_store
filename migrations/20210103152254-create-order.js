@@ -19,7 +19,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       address: {
         allowNull: false,
@@ -43,14 +44,16 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'DeliveryTypes'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       paymentTypeId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
           model: 'PaymentTypes'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,

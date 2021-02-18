@@ -14,14 +14,16 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       productId: {
         allowNull: true,
         type: Sequelize.INTEGER,
         references: {
           model: 'Products'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       limitations: Sequelize.STRING,
       dignity: Sequelize.STRING,
@@ -39,7 +41,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Comments'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,

@@ -16,14 +16,16 @@ module.exports = class Comment extends CRUDOptimisation {
         type: DataType.INTEGER,
         references: {
           model: 'Users'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       productId: {
         allowNull: true,
         type: DataType.INTEGER,
         references: {
           model: 'Products'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       limitations: DataType.STRING,
       dignity: DataType.STRING,
@@ -41,7 +43,8 @@ module.exports = class Comment extends CRUDOptimisation {
         type: DataType.INTEGER,
         references: {
           model: 'Comments'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,

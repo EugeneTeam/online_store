@@ -14,21 +14,24 @@ module.exports = {
         references: {
           model: 'Products',
           key: 'id'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       characteristicId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
           model: 'Characteristics'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       valueId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
           model: 'Values'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,

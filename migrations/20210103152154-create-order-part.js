@@ -14,7 +14,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Products'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       quantity: {
         allowNull: false,
@@ -25,7 +26,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,

@@ -8,12 +8,18 @@ module.exports = class CharacteristicValue extends CRUDOptimisation {
         allowNull: false,
         primaryKey: true,
         type: DataType.INTEGER,
+        references: {
+          model: 'Characteristics'
+        },
         onDelete: 'CASCADE'
       },
       valueId: {
         allowNull: false,
         primaryKey: true,
         type: DataType.INTEGER,
+        references: {
+          model: 'Values'
+        },
         onDelete: 'CASCADE'
       },
     }, {

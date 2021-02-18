@@ -8,12 +8,18 @@ module.exports = class RolePermission extends CRUDOptimisation {
         allowNull: false,
         primaryKey: true,
         type: DataType.STRING,
+        references: {
+          model: 'Permissions'
+        },
         onDelete: 'CASCADE'
       },
       roleId: {
         allowNull: false,
         primaryKey: true,
         type: DataType.STRING,
+        references: {
+          model: 'Roles'
+        },
         onDelete: 'CASCADE'
       },
     }, {

@@ -67,6 +67,7 @@ const getMethodName = query => {
      * {someMethod}
      */
     let temp = query.replace(/[\n]/g, '').replace(/[ ]/g, '');
+    console.log(temp)
     const isCase1 = temp[0] === '{';
     const end = temp.substring(1, temp.length).search(/[{}()]/g);
     const result = temp.substring(isCase1 ? 1 : 'query'.length, end + 1);

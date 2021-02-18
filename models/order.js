@@ -44,14 +44,16 @@ module.exports = class Order extends CRUDOptimisation {
         type: DataType.INTEGER,
         references: {
           model: 'PaymentTypes'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       deliveryTypeId: {
         allowNull: false,
         type: DataType.INTEGER,
         references: {
           model: 'DeliveryTypes'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,

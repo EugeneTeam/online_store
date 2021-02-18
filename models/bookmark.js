@@ -10,14 +10,16 @@ module.exports = class Bookmark extends CRUDOptimisation {
         type: DataType.INTEGER,
         references: {
           model: 'Users'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       productId: {
         allowNull: false,
         type: DataType.INTEGER,
         references: {
           model: 'Products'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,

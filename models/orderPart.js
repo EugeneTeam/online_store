@@ -15,7 +15,8 @@ module.exports = class OrderPart extends CRUDOptimisation {
         type: DataType.INTEGER,
         references: {
           model: 'Products'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       quantity: {
         allowNull: false,
@@ -26,7 +27,8 @@ module.exports = class OrderPart extends CRUDOptimisation {
         type: DataType.INTEGER,
         references: {
           model: 'Users'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,

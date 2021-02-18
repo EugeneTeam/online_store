@@ -30,12 +30,10 @@ module.exports = class ImageGallery extends CRUDOptimisation {
 
   static associate(models) {
     this.belongsTo(models.Image, {
-      foreignKey: 'imageId',
-      onDelete: 'CASCADE'
+      foreignKey: 'imageId'
     });
     this.belongsTo(models.Gallery, {
-      foreignKey: 'galleryId',
-      onDelete: 'CASCADE'
+      foreignKey: 'galleryId'
     });
   }
 }

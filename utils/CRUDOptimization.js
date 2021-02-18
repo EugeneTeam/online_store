@@ -23,10 +23,10 @@ class CRUDOptimisation extends Model {
         throw new ApolloError('Wrong value type', '400');
     }
 
-    static async smartSearch({options, returnErrorIfItemNotFound = true, returnsItemsList= false, returnsCountAndList = false, customErrorMessage = ''}) {
+    static async smartSearch({options, returnErrorIfItemNotFound = undefined, returnsItemsList= false, returnsCountAndList = false, customErrorMessage = ''}) {
         const item = await this[this.returnMethodByValueType(options, returnsItemsList, returnsCountAndList)](options);
 
-        if (returnErrorIfItemNotFound && !item) {
+        if (returnErrorIfItemNotFound === true && !item) {
             throw new ApolloError(customErrorMessage ? customErrorMessage : `${this.name} not found`)
         }
         return item;

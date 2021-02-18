@@ -91,7 +91,7 @@ module.exports = class User extends CRUDOptimisation {
       foreignKey: 'userId'
     });
     this.hasMany(models.Bookmark, {
-      foreignKey: 'userId',
+      foreignKey: 'userId'
     });
     this.hasMany(models.OrderPart, {
       foreignKey: 'userId'

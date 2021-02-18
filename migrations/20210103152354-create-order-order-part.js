@@ -9,7 +9,8 @@ module.exports = {
         primaryKey: true,
         references: {
           model: 'Orders'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       orderPartId: {
         allowNull: false,
@@ -17,7 +18,8 @@ module.exports = {
         primaryKey: true,
         references: {
           model: 'OrderParts'
-        }
+        },
+        onDelete: 'CASCADE'
       }
     });
   },

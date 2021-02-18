@@ -10,7 +10,8 @@ module.exports = class OrderOrderPart extends CRUDOptimisation {
         primaryKey: true,
         references: {
           model: 'Orders'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       orderPartId: {
         allowNull: false,
@@ -18,7 +19,8 @@ module.exports = class OrderOrderPart extends CRUDOptimisation {
         primaryKey: true,
         references: {
           model: 'OrderParts'
-        }
+        },
+        onDelete: 'CASCADE'
       }
     }, {
       sequelize,
