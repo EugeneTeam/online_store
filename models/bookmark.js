@@ -1,6 +1,5 @@
 'use strict';
 const {CRUDOptimisation} = require('../utils/CRUDOptimization');
-const {string} = require('../validation/duplicateValidations');
 
 module.exports = class Bookmark extends CRUDOptimisation {
   static init(sequelize, DataType) {

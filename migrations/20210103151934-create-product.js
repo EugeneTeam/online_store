@@ -35,7 +35,6 @@ module.exports = {
         }
       },
       galleryId: {
-        allowNull: false,
         type: Sequelize.INTEGER,
         references: {
           model: 'Galleries'

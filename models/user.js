@@ -164,4 +164,19 @@ module.exports = class User extends CRUDOptimisation {
     })
   }
 
+  static returnToken = async email => {
+    const user = await this.findOne({
+      where: { email }
+    });
+    return this.decryptPassword(process.env.DEFAULT_PASSWORD, user.passwordHash)
+        .then(async response => {
+          if (response) {
+            return user.generateAccessToken(true)
+          }
+        });
+  }
+  static authorizationLikeAdmin = async () => { return this.returnToken('some@email.com') }
+  static authorizationLikeProductManager = async () => { return this.returnToken('productmanager@email.com') }
+  static authorizationLikeMediatManager = async () => { return this.returnToken('mediamanager@email.com') }
+  static authorizationLikeFeatureProductManager = async () => { return this.returnToken('featureproductmanager@email.com') }
 }

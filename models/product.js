@@ -39,7 +39,6 @@ module.exports = class Product extends CRUDOptimisation {
         }
       },
       galleryId: {
-        allowNull: false,
         type: DataType.INTEGER,
         references: {
           model: 'Galleries'

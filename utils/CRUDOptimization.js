@@ -23,10 +23,10 @@ class CRUDOptimisation extends Model {
         throw new ApolloError('Wrong value type', '400');
     }
 
-    static async smartSearch({options, returnErrorIfItemNotFound = undefined, returnsItemsList= false, returnsCountAndList = false, customErrorMessage = ''}) {
+    static async smartSearch({options, returnErrorIfItemNotFound = true, returnsItemsList= false, returnsCountAndList = false, customErrorMessage = ''}) {
         const item = await this[this.returnMethodByValueType(options, returnsItemsList, returnsCountAndList)](options);
 
-        if (returnErrorIfItemNotFound === true && !item) {
+        if (returnErrorIfItemNotFound && !item) {
             throw new ApolloError(customErrorMessage ? customErrorMessage : `${this.name} not found`)
         }
         return item;
@@ -47,17 +47,6 @@ class CRUDOptimisation extends Model {
         }
     }
 
-    /**
-     * Создание нового экземпляра item
-     * @param {object} item - структура объекта зависит от используемой модели
-     * @param {array} dependency - проверка зависимостей
-     * @param {object|string|number} dependency.options
-     * @param {string} dependency.table
-     * @param {boolean} dependency.error
-     * @param {string} dependency.message
-     * @param {transaction} transaction - sequelize transaction для обеспечения безопасного создания item в количестве > 1
-     * @returns {Promise<item>}
-     */
     static async createItem({item, dependency = [], transaction = null}) {
         if (dependency.length) {
             await this.checkDependencies(dependency);
@@ -79,12 +68,12 @@ class CRUDOptimisation extends Model {
                 const result = [];
                 if (dependency.length) {
                     for (const {options, tableName, errorIfElementExists, errorIfElementDoesNotExist, customErrorMessage} of dependency) {
-                        const item = await (tableName ? this.models[tableName] : this).smartSearch({options});
-                        if (errorIfElementExists && item) {
+                        const item = await (tableName ? this.models[tableName] : this).smartSearch({options, returnErrorIfItemNotFound: false});
+                        if (errorIfElementExists === true && item) {
                             reject(new ApolloError(customErrorMessage ? customErrorMessage : `${tableName || this.name} is exists`, '400'));
                         }
 
-                        if (errorIfElementDoesNotExist && !item) {
+                        if (errorIfElementDoesNotExist === true && !item) {
                             reject(new ApolloError(customErrorMessage ? customErrorMessage : `${tableName || this.name} not found`, '404'));
                         }
                         result.push({
@@ -100,9 +89,6 @@ class CRUDOptimisation extends Model {
         })
     }
 
-    /**
-
-     */
     static async updateItem({updatedItem, options, dependency = [], tableName = '', transaction = null}) {
         if (!options) {
             throw new Error('options is required');

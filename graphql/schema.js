@@ -19,7 +19,8 @@ const excludeMethods = [
     'getDeliveryTypeList',
     'getPaymentTypeList',
     'updateOrderPart',
-    'removeOrderPart'
+    'removeOrderPart',
+    'getCategoryById'
 ];
 
 module.exports = new ApolloServer({

@@ -39,12 +39,10 @@ module.exports = class Comment extends CRUDOptimisation {
         defaultValue: 0
       },
       parentId: {
-        allowNull: true,
         type: DataType.INTEGER,
         references: {
           model: 'Comments'
-        },
-        onDelete: 'CASCADE'
+        }
       },
       createdAt: {
         allowNull: false,

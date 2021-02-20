@@ -37,12 +37,10 @@ module.exports = {
         defaultValue: 0
       },
       parentId: {
-        allowNull: true,
         type: Sequelize.INTEGER,
         references: {
           model: 'Comments'
-        },
-        onDelete: 'CASCADE'
+        }
       },
       createdAt: {
         allowNull: false,
