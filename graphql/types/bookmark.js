@@ -8,11 +8,11 @@ module.exports = class Bookmark {
                 getBookmarkListByUserId: async (obj, args) => {
                     return models.Bookmark.smartSearch({
                         options: {
-                            ...(args.limit ? {limit: args.limit || PAGINATION.DEFAULT_LIMIT} : null),
-                            ...(args.offset ? {offset: args.offset || PAGINATION.DEFAULT_OFFSET} : null),
+                            limit: args.limit || PAGINATION.DEFAULT_LIMIT,
+                            offset: args.offset || PAGINATION.DEFAULT_OFFSET
                         },
                         returnsCountAndList: true
-                    })
+                    });
                 },
             },
             Bookmark: {
@@ -44,7 +44,7 @@ module.exports = class Bookmark {
                                 errorIfElementExists: true
                             }
                         ]
-                    })
+                    });
                 },
                 removeBookmark: async (obj, args, context) => {
                     return models.Bookmark.removeItem({
@@ -54,7 +54,7 @@ module.exports = class Bookmark {
                                 productId: args.productId,
                             }
                         }
-                    })
+                    });
                 }
             }
         };

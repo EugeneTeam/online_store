@@ -39,7 +39,7 @@ module.exports = class Characteristic {
                             errorIfElementExists: true,
                             customErrorMessage: `Characteristic "${args.name}" is exists`
                         }]
-                    })
+                    });
                 },
                 updateCharacteristic: async(obj, args) => {
                     return models.Characteristic.updateItem({

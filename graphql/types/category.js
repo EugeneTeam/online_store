@@ -39,7 +39,7 @@ module.exports = class Category {
                             errorIfElementExists: true,
                             customErrorMessage: `Category "${args.name}" is exists`
                         }]
-                    })
+                    });
                 },
                 updateCategory: async(obj, args) => {
                     return models.Category.updateItem({
@@ -61,7 +61,7 @@ module.exports = class Category {
                                 customErrorMessage: `"${args.name}" is used`
                             }
                         ]
-                    })
+                    });
                 },
                 removeCategory: async(obj, args) => {
                     return models.Category.removeItem({

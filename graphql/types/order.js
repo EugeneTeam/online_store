@@ -18,8 +18,8 @@ module.exports = class Order {
                                 userId: user.isCustomer ? user.id : args.userId,
                                 ...(args.status ? {status: args.status} : null)
                             },
-                            ...(args.limit ? {limit: args.limit || PAGINATION.DEFAULT_LIMIT} : null),
-                            ...(args.offset ? {offset: args.offset || PAGINATION.DEFAULT_OFFSET} : null),
+                            limit: args.limit || PAGINATION.DEFAULT_LIMIT,
+                            offset: args.offset || PAGINATION.DEFAULT_OFFSET
                         },
                         returnsCountAndList: true
                     });

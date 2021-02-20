@@ -2,7 +2,6 @@ const models = require('../../models');
 const {PAGINATION} = require('../../config/constants');
 
 module.exports = class Discount {
-
     static resolver() {
         return  {
             Query: {

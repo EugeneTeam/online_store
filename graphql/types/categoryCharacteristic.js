@@ -67,11 +67,11 @@ module.exports = class CategoryCharacteristic {
                                             errorIfElementExists: true,
                                             customErrorMessage: `Characteristic (Id:${id}) added to this category`
                                         }]
-                                })
+                                });
                             }
-                        })
+                        });
                     }
-                    return models.Category.smartSearch({options: args.categoryId})
+                    return models.Category.smartSearch({options: args.categoryId});
                 }
             }
         };
