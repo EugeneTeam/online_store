@@ -19,6 +19,11 @@ module.exports = class DeliveryType extends CRUDOptimisation {
         allowNull: false,
         type: DataType.STRING
       },
+      price: {
+        allowNull: false,
+        type: DataType.FLOAT,
+        defaultValue: 0
+      },
       createdAt: {
         allowNull: false,
         type: DataType.DATE

@@ -26,6 +26,7 @@ module.exports = class DeliveryType {
                         item: {
                             status: args.status,
                             name: args.name,
+                            price: args.price,
                             createdAt: new Date(),
                             updatedAt: new Date()
                         },
@@ -43,6 +44,7 @@ module.exports = class DeliveryType {
                         options: args.deliveryTypeId,
                         updatedItem: {
                             ...(args.name ? {name: args.name} : null),
+                            ...(args.price ? {price: args.price} : null),
                             status: args.status,
                             updatedAt: new Date()
                         },
@@ -68,6 +70,7 @@ module.exports = class DeliveryType {
                 id: Int
                 status: String
                 name: String
+                price: Float
                 createdAt: String
                 updatedAt: String
             }
@@ -88,8 +91,8 @@ module.exports = class DeliveryType {
 
     static mutationTypeDefs() {
         return `
-            createDeliveryType(name: String!, status: String!): DeliveryType
-            updateDeliveryType(name: String, status: String!, deliveryTypeId: Int!): DeliveryType
+            createDeliveryType(price: Float!, name: String!, status: String!): DeliveryType
+            updateDeliveryType(price: Float, name: String, status: String!, deliveryTypeId: Int!): DeliveryType
             removeDeliveryType(deliveryTypeId: Int!): String
         `;
     }
