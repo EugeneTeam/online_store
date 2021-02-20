@@ -29,9 +29,16 @@ module.exports = class FeatureProduct extends CRUDOptimisation {
         },
         onDelete: 'CASCADE'
       },
+      createdAt: {
+        allowNull: false,
+        type: DataType.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataType.DATE
+      }
     }, {
-      sequelize,
-      timestamp: false
+      sequelize
     })
   }
 

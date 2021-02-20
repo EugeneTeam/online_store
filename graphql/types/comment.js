@@ -1,6 +1,7 @@
 const models = require('../../models');
 const {PAGINATION} = require('../../config/constants');
 const {ApolloError} = require('apollo-server');
+const {Op} = require('sequelize');
 
 module.exports = class Comment {
     static resolver() {
@@ -13,10 +14,31 @@ module.exports = class Comment {
                     return models.Comment.getChildList(args.commentId);
                 },
                 getCommentList: async (obj, args) => {
+                    let rating = {
+                        [Op.and]: [
+                            {
+                                rating: {
+                                    [Op.gte]: args.ratingFrom || 0
+                                }
+                            },
+                            {
+                                rating: {
+                                    [Op.lte]: args.ratingTo || 1000
+                                }
+                            }
+                        ]
+                    };
+
                     return models.Comment.smartSearch({
                         options: {
                             ...(args.limit ? {limit: args.limit || PAGINATION.DEFAULT_LIMIT} : null),
-                            ...(args.offset ? {offset: args.offset || PAGINATION.DEFAULT_OFFSET} : null)
+                            ...(args.offset ? {offset: args.offset || PAGINATION.DEFAULT_OFFSET} : null),
+                            where: {
+                                ...(args.productId ? {productId: args.productId} : null),
+                                ...(args.userId ? {userId: args.userId} : null),
+                                ...(args.ratingFrom || args.ratingTo ? rating : null)
+                            },
+                            ...(args.sortByRating ? {order: [['rating', args.sortByRating]]} : null)
                         },
                         returnsCountAndList: true
                     });
@@ -27,43 +49,22 @@ module.exports = class Comment {
                 replyToComment: comment => models.Comment.getChildList(comment.id)
             },
             Mutation: {
-                createComment: async (obj, {createComment}, {user}) => {
-                    if (createComment.rating > 5 || createComment.rating < 0) {
+                createComment: async (obj, {createCommentInput}, {user}) => {
+                    if (createCommentInput.rating > 5 || createCommentInput.rating < 0 && !createCommentInput.parentId) {
                         throw new ApolloError('valid value for rating is from 0 to 5', '400');
                     }
                     return models.Comment.createItem({
                         item: {
                             userId: user.id,
-                            productId: createComment.productId || null,
-                            limitations: createComment.limitations || null,
-                            dignity: createComment.dignity || null,
-                            text: createComment.text,
-                            rating: createComment.rating,
-                            parentId: createComment.parentId || null,
+                            productId: createCommentInput.productId || null,
+                            limitations: createCommentInput.parentId ? null : (createCommentInput.limitations || null) ,
+                            dignity: createCommentInput.parentId ? null : (createCommentInput.dignity || null) ,
+                            text: createCommentInput.text,
+                            rating: createCommentInput.parentId ? null : (createCommentInput.rating),
+                            parentId: createCommentInput.parentId || null,
                             createdAt: new Date(),
                             updatedAt: new Date(),
                         }
-                    });
-                },
-                replyToComment: async (obj, {replyComment}, {user}) => {
-                    return models.Comment.createItem({
-                        item: {
-                            userId: user.id,
-                            productId: replyComment.productId,
-                            limitations: null,
-                            dignity: null,
-                            text: replyComment.text,
-                            rating: 0,
-                            parentId: replyComment.parentId,
-                            createdAt: new Date(),
-                            updatedAt: new Date(),
-                        },
-                        dependency: [
-                            {
-                                options: replyComment.parentId,
-                                errorIfElementDoesNotExist: true
-                            }
-                        ]
                     });
                 },
                 removeComment: async (obj, {commentId}) => {
@@ -92,11 +93,7 @@ module.exports = class Comment {
                 dignity: String
                 text: String!
                 rating: Float!
-            }
-            input ReplyCommentInput {
-                productId: Int
-                text: String!
-                parentId: Int!
+                parentId: Int
             }
             type CommentList {
                 count: Int
@@ -107,15 +104,14 @@ module.exports = class Comment {
 
     static queryTypeDefs() {
         return `
-            getCommentList(limit: Int, offset: Int): CommentList
+            getCommentList(limit: Int, offset: Int,productId: Int, userId: Int, ratingFrom: Float, ratingTo: Float, sortByRating: String): CommentList
             getReplyComments(commentId: Int!): [Comment]
         `;
     }
 
     static mutationTypeDefs() {
         return `
-            createComment(createComment: CreateCommentInput): Comment
-            replyToComment(replyComment: ReplyCommentInput): Comment
+            createComment(createCommentInput: CreateCommentInput): Comment
             removeComment(commentId: Int!): String
         `;
     }

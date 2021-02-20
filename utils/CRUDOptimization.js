@@ -20,7 +20,7 @@ class CRUDOptimisation extends Model {
         if (typeof value === 'number' || typeof value === 'string') {
             return 'findByPk';
         }
-        throw new ApolloError('Wrong value type', '400');
+        throw new ApolloError(`Wrong value type: ${typeof value}`, '400');
     }
 
     static async smartSearch({options, returnErrorIfItemNotFound = true, returnsItemsList= false, returnsCountAndList = false, customErrorMessage = ''}) {

@@ -47,9 +47,14 @@ module.exports = class DeliveryType {
                             updatedAt: new Date()
                         },
                         dependency: args.name ? [{
-                            options: {where: {name: args.name}},
+                            options: {
+                                where: {
+                                    name: args.name,
+                                    status: args.status
+                                }
+                            },
                             errorIfElementExists: true,
-                            customErrorMessage: `${args.name} is exists`
+                            customErrorMessage: `PaymentType is exists`
                         }] : []
                     });
                 },

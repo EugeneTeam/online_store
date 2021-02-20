@@ -10,19 +10,15 @@ module.exports = class FeatureProduct {
             },
             Mutation: {
                 updateCharacteristicInProduct: async (obj, args) => {
+                    const {productId} = await models.FeatureProduct.smartSearch({
+                        options: args.featureProductId
+                    });
                     const product = await models.Product.smartSearch({
-                        options: args.productId
+                        options: productId
                     });
                     return models.FeatureProduct.updateItem({
-                        options: {
-                            where: {
-                                productId: args.productId,
-                                characteristicId: args.characteristicId,
-                                valueId: args.valueId,
-                            }
-                        },
+                        options: args.featureProductId,
                         updatedItem: {
-                            productId: args.productId,
                             characteristicId: args.newCharacteristicId,
                             valueId: args.newValueId
                         },
@@ -52,7 +48,7 @@ module.exports = class FeatureProduct {
                                 tableName: 'CharacteristicValue',
                                 options: {
                                     where: {
-                                        characteristicId: args.characteristicId,
+                                        characteristicId: args.newCharacteristicId,
                                         valueId: args.newValueId
                                     }
                                 },
@@ -62,7 +58,7 @@ module.exports = class FeatureProduct {
                             {
                                 options: {
                                     where: {
-                                        productId: args.productId,
+                                        productId,
                                         characteristicId: args.newCharacteristicId,
                                         valueId: args.newValueId,
                                     }
@@ -82,6 +78,8 @@ module.exports = class FeatureProduct {
                             productId: args.productId,
                             characteristicId: args.characteristicId,
                             valueId: args.valueId,
+                            createdAt: new Date(),
+                            updatedAt: new Date()
                         },
                         dependency: [
                             {
@@ -132,13 +130,7 @@ module.exports = class FeatureProduct {
                 },
                 removeCharacteristicFromProduct: async (obj, args) => {
                     return models.FeatureProduct.removeItem({
-                        options: {
-                            where: {
-                                productId: args.productId,
-                                characteristicId: args.characteristicId,
-                                valueId: args.valueId
-                            }
-                        }
+                        options: args.featureProductId
                     });
                 }
             }
@@ -161,9 +153,9 @@ module.exports = class FeatureProduct {
 
     static mutationTypeDefs() {
         return `
-            updateCharacteristicInProduct(productId: Int!, characteristicId: Int!, valueId: Int!, newCharacteristicId: Int!, newValueId: Int!): FeatureProduct
+            updateCharacteristicInProduct(featureProductId: Int!, newCharacteristicId: Int!, newValueId: Int!): FeatureProduct
             addCharacteristicToProduct(productId: Int!, characteristicId: Int!, valueId: Int!): FeatureProduct
-            removeCharacteristicFromProduct(productId: Int!, characteristicId: Int!,  valueId: Int!): String
+            removeCharacteristicFromProduct(featureProductId: Int!): String
         `;
     }
 }

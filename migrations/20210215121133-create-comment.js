@@ -31,16 +31,13 @@ module.exports = {
         allowNull: false,
         type: Sequelize.TEXT
       },
-      rating: {
-        allowNull: false,
-        type: Sequelize.FLOAT,
-        defaultValue: 0
-      },
+      rating: Sequelize.FLOAT,
       parentId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Comments'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,

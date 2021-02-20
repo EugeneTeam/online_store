@@ -33,16 +33,13 @@ module.exports = class Comment extends CRUDOptimisation {
         allowNull: false,
         type: DataType.TEXT
       },
-      rating: {
-        allowNull: false,
-        type: DataType.FLOAT,
-        defaultValue: 0
-      },
+      rating: DataType.FLOAT,
       parentId: {
         type: DataType.INTEGER,
         references: {
           model: 'Comments'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,

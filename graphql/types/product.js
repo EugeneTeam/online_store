@@ -11,7 +11,7 @@ module.exports = class Product {
                     });
                 },
                 getProductList: async(obj, args) => {
-                    return models.Category.smartSearch({
+                    return models.Product.smartSearch({
                         options: {
                             limit: args.limit || PAGINATION.DEFAULT_LIMIT,
                             offset: args.offset || PAGINATION.DEFAULT_OFFSET
@@ -39,7 +39,8 @@ module.exports = class Product {
                                     name: args.name
                                 }
                             },
-                            errorIfElementExists: true
+                            errorIfElementExists: true,
+                            customErrorMessage: `Name "${args.name}" is used`
                         },
                         {
                             options: args.categoryId,
@@ -66,10 +67,13 @@ module.exports = class Product {
                             description: args.description,
                             price: args.price,
                             discountId: args.discountId || null,
-                            galleryId: args.galleryId,
+                            galleryId: args.galleryId || null,
                             rating: 5,
                             createdAt: new Date(),
                             updatedAt: new Date(),
+                            dependency: {
+
+                            }
                         },
                         dependency
                     });
@@ -141,7 +145,7 @@ module.exports = class Product {
                 rating: Float
                 createdAt: String
                 updatedAt: String
-                discount: [Discount]
+                discount: Discount
                 gallery: Gallery
                 category: Category
                 comments: [Comment]

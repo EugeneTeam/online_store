@@ -38,7 +38,7 @@ module.exports = class Image {
                                 }
                             },
                             errorIfElementExists: true,
-                            customErrorMessage: `"${args.url}" is used`
+                            customErrorMessage: `"${args.url}" is exists`
                         }]
                     });
                 },
@@ -58,7 +58,7 @@ module.exports = class Image {
                                 }
                             },
                             errorIfElementExists: true,
-                            customErrorMessage: `"${args.url}" is used`
+                            customErrorMessage: `"${args.url}" is exists`
                         }]
                     })
                 },

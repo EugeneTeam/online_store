@@ -68,12 +68,12 @@ module.exports = class Gallery {
                     });
                     await models.sequelize.transaction(async transaction => {
                        for (const imageId of imagesIds) {
-                           await models.Image.smartSearch({options: imageId, error: true});
+                           await models.Image.smartSearch({options: imageId, errorIfElementDoesNotExist: true});
                            await models.ImageGallery.createItem({
-                              item: {galleryId, imageId},
-                              transaction,
-                              dependency: [{
-                                  options: {galleryId, imageId},
+                               transaction,
+                               item: {galleryId, imageId},
+                               dependency: [{
+                                  options: {where: {galleryId, imageId}},
                                   errorIfElementExists: true,
                                   customErrorMessage: `duplicate entry. galleryId:${galleryId}, imageId:${imageId}`
                               }]
@@ -109,7 +109,7 @@ module.exports = class Gallery {
                 name: String
                 createdAt: String
                 updatedAt: String
-                Images: [Image]
+                images: [Image]
             }
         `;
     }

@@ -48,7 +48,7 @@ module.exports = class Order {
                             returnsItemsList: true
                         });
 
-                        if (orderInput.partsOrder.length) {
+                        if (orderInput.partsOrder && orderInput.partsOrder.length) {
                             for (const partId of orderInput.partsOrder) {
 
                                 const index = partsOrder.findIndex(item => item.orderPartId === partId);
@@ -86,6 +86,11 @@ module.exports = class Order {
                             }
                         }
                         return order;
+                    });
+                },
+                removeOrder: async (obj, {orderId}) => {
+                    return models.Order.removeItem({
+                        options: orderId
                     });
                 },
                 createOrder: async (obj, {orderInput}, {user}) => {
@@ -152,7 +157,8 @@ module.exports = class Order {
                                     dependency: [{
                                         options: orderPartId,
                                         tableName: 'OrderPart',
-                                        errorIfElementDoesNotExist: true
+                                        errorIfElementDoesNotExist: true,
+                                        customErrorMessage: `OrderPart not found. id:${orderPartId}`
                                     }]
                                 });
                             }
@@ -191,9 +197,9 @@ module.exports = class Order {
                 partsOrder: [Int]!
             }
             input OrderUpdate {
-                deliveryTypeId: Int!
-                paymentTypeId: Int!
-                partsOrder: [Int]!
+                deliveryTypeId: Int
+                paymentTypeId: Int
+                partsOrder: [Int]
                 status: String
             }
         `;
@@ -210,6 +216,7 @@ module.exports = class Order {
         return `
             updateOrder(orderInput: OrderUpdate!, orderId: Int!): Order
             createOrder(orderInput: OrderInput!): Order
+            removeOrder(orderId: Int): String
         `;
     }
 }

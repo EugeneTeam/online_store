@@ -40,6 +40,9 @@ module.exports = class RolePermission {
                 addPermissionsForRole: async (obj, args) => {
                     if (args.permissionIds.length) {
                         await models.sequelize.transaction(async transaction => {
+                            await models.Role.smartSearch({
+                                options: args.roleId
+                            });
                             for (const id of args.permissionIds) {
                                 await models.RolePermission.createItem({
                                     item: {
@@ -49,12 +52,7 @@ module.exports = class RolePermission {
                                     transaction,
                                     dependency: [
                                         {
-                                            options: args.roleId,
-                                            tableName: 'Role',
-                                            errorIfElementDoesNotExist: true
-                                        },
-                                        {
-                                            options: args.permissionId,
+                                            options: id,
                                             tableName: 'Permission',
                                             errorIfElementDoesNotExist: true
                                         },
