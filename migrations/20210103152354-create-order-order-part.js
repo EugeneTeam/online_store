@@ -1,4 +1,4 @@
-'use strict';
+'use strict';//TODO лишняя таблица. Связь один ко многим заказ - элементы заказа
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {

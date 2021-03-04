@@ -48,7 +48,7 @@ module.exports = class Order {
                             returnsItemsList: true
                         });
 
-                        if (orderInput.partsOrder && orderInput.partsOrder.length) {
+                        if (orderInput.partsOrder && orderInput.partsOrder.length) {//TODO упрощай пирамиду
                             for (const partId of orderInput.partsOrder) {
 
                                 const index = partsOrder.findIndex(item => item.orderPartId === partId);

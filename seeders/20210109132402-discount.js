@@ -8,7 +8,7 @@ module.exports = {
         {
             type: 'PERCENT',
             discount: 10,
-            expiredAt: new Date(),
+            expiredAt: new Date(),//TODO докинь хоть пару дней
             createdAt: new Date(),
             updatedAt: new Date()
         },

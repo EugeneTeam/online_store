@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
-    "db:create": "node node_modules/.bin/sequelize db:create",
+    "db:create": "node node_modules/.bin/sequelize db:create", // TODO используй переменные окружения в этих скриптах
     "db:migrate": "node node_modules/.bin/sequelize db:migrate",
     "db:seed": "node node_modules/.bin/sequelize db:seed:all",
     "test": "mocha ./tests/*.test.js"
@@ -31,7 +31,7 @@
     "moment": "^2.29.1",
     "mysql2": "^2.2.5",
     "nodemailer": "^6.4.18",
-    "nodemon": "^2.0.6",
+    "nodemon": "^2.0.6",  // TODO nodemon и другие пакеты которые нужны только при разработке нужно помещать в devDependencies
     "pg": "^8.5.1",
     "rand-token": "^1.0.1",
     "sequelize": "^6.3.5",

@@ -22,7 +22,7 @@ module.exports = {
         type: Sequelize.STRING,
         unique: true
       },
-      email: {
+      email: { // TODO добавить встроенную валидацию на email
         allowNull: false,
         type: Sequelize.STRING,
         unique: true
@@ -38,7 +38,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       resetToken: Sequelize.STRING,
-      authToken: {
+      authToken: { // TODO это не токен а просто хэш. Его обычно называют authKey
         allowNull: false,
         type: Sequelize.STRING
       },
@@ -47,21 +47,21 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Roles',
-          key: 'id'
+          key: 'id' // TODO можно не указывать
         }
       },
       address: {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      isCustomer: {
+      isCustomer: { // TODO зачем надо это поле если есть роли? создай роль Customer
         allowNull: false,
         type: Sequelize.BOOLEAN,
         defaultValue: true
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE, //TODO в таких полях очень важно указывать часовой пояс. Используй TIMESTAMP
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updatedAt: {

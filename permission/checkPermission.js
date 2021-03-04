@@ -5,7 +5,7 @@ const {permissionErrors, tokenErrors, userErrors} = require('../config/errorList
 
 const checkPermission = (query, user) => {
     const permissions = user.Role.Permissions.map(permission => permission.name);
-    if (typeof query === 'string') {
+    if (typeof query === 'string') {//TODO убрать лишнюю вложенность здесь и далее
         const methodName = getMethodName(query);
         if (methodName !== null && list[methodName] !== undefined) {
             if (list[methodName].permissions.length) {
@@ -17,7 +17,7 @@ const checkPermission = (query, user) => {
                     }
                 }
 
-                if (!denied) {
+                if (!denied) {//TODO не верное название переменной, вводит в заблуждение. Получается ты исключение бросаешь когда "не запрещено"
                     throw new ApolloError(permissionErrors.access_denied.message, permissionErrors.access_denied.code);
                 }
             }

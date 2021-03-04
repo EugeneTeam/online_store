@@ -9,7 +9,7 @@ module.exports = {
     dialect: 'mysql',
     operatorsAliases: 0,
     seederStorage: 'sequelize',
-    logging: console.log
+    logging: console.log // TODO это значение по-умолчанию, его можно не указывать. А вот на продакшене нужно эти логи отключать.
   },
   test: {
     username: 'root',

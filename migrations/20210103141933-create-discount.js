@@ -12,13 +12,13 @@ module.exports = {
         allowNull: false,
         type: Sequelize.ENUM('PERCENT', 'SUM')
       },
-      discount: {
+      discount: {        //TODO переименуй в amount, это больше подходит по смыслу
         allowNull: false,
         type: Sequelize.FLOAT
       },
       expiredAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE, //TODO тоже нужен часовой пояс
       },
       createdAt: {
         allowNull: false,

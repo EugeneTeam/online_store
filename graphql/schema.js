@@ -4,7 +4,7 @@ const {checkPermission, checkAuthorization, getMethodName} = require('../permiss
 
 const {resolvers, typeDefs} = require('./types')
 
-const excludeMethods = [
+const excludeMethods = [//TODO не понятно из названия почему они исключенные. переименуй
     'authorization',
     'registration',
     'resendAccountConfirmationEmail',

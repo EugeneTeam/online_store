@@ -156,7 +156,7 @@ module.exports = class User extends CRUDOptimisation {
     })
   }
 
-  static async decryptPassword(password, hash) {
+  static async decryptPassword(password, hash) {//TODO тут скорее не расшифровка а сравнение или валидация..
     return new Promise((resolve, reject) => {
       bcrypt.compare(password, hash)
           .then(decryptPassword => resolve(decryptPassword))

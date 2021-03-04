@@ -2,11 +2,11 @@
 require('dotenv').config();
 const {getRandom} = require('../utils/random');
 
-function createOrder(name, categoryId, price, galleryId) {
+function createOrder(name, categoryId, price, galleryId) {//TODO createProduct
     return {
         name,
         categoryId,
-        description: 'some description...',
+        description: 'some description...',//TODO lorem ipsum
         price,
         discountId: null,
         galleryId,

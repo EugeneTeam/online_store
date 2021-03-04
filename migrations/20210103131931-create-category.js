@@ -21,7 +21,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-      }
+      }//TODO пердусмотри вложенность категорий через parentId
     });
   },
   down: async (queryInterface, Sequelize) => {

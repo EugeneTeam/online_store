@@ -25,8 +25,8 @@ module.exports = {
         },
         onDelete: 'CASCADE'
       },
-      limitations: Sequelize.STRING,
-      dignity: Sequelize.STRING,
+      limitations: Sequelize.STRING,//TODO disadvantages
+      dignity: Sequelize.STRING, //TODO advantages
       text: {
         allowNull: false,
         type: Sequelize.TEXT
@@ -48,7 +48,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-      }
+      }//TODO добавь статус комментария дя модерации: новый, подтвержденный, забаненный
     });
   },
   down: async (queryInterface, Sequelize) => {

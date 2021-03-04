@@ -61,7 +61,7 @@ module.exports = class Comment extends CRUDOptimisation {
             const product = await this.models.Product.findByPk(comment.productId);
             let totalRating = 0;
             let commentCount = 0;
-            response.filter(item => item.rating > 0).forEach(item => {
+            response.filter(item => item.rating > 0).forEach(item => {//TODO используй reduce()
               commentCount++;
               totalRating += item.rating;
             });

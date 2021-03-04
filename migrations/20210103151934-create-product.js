@@ -12,7 +12,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      categoryId: {
+      categoryId: {//TODO продукт может принадлежать нескольким категориям? Возможно здесь стоит указывать главную каегорию, по которой будем формировать урл продукта, а для остальных предусмотреть линковочную таблицу.
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
@@ -34,7 +34,7 @@ module.exports = {
           model: 'Discounts'
         }
       },
-      galleryId: {
+      galleryId: {//TODO товар может содержать несколько галлерей? и зачем нужны галлереи когда можно сделать связь изображений и товаров напрямую? Думаю галереи нужно убрать вообще
         type: Sequelize.INTEGER,
         references: {
           model: 'Galleries'

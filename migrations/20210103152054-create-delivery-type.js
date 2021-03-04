@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      status: {
+      status: {//TODO если статуса всего 2 то назови поле isActive и сделай ему тип булево
         allowNull: false,
         type: Sequelize.ENUM('ACTIVE', 'INACTIVE'),
         defaultValue: 'INACTIVE'

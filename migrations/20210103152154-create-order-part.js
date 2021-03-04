@@ -21,7 +21,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
       },
-      userId: {
+      userId: {//TODO зачем здесь юзер? Не достаточно его в заказе?
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {

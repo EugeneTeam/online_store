@@ -11,11 +11,11 @@ module.exports = {
       },
       status: {
         allowNull: false,
-        type: Sequelize.ENUM('NEW', 'BEING_FORMED', 'SENT', 'CANCELED'),
+        type: Sequelize.ENUM('NEW', 'BEING_FORMED', 'SENT', 'CANCELED'),//TODO BEING_FORMED -> pending(принят в обработку) + добавь done(выполнен) + raw(еще не оформлена корзина)
         defaultValue: 'NEW'
       },
       userId: {
-        allowNull: false,
+        allowNull: false,//TODO нужно чтобы юзер мог купить что-то не регистрируясь
         type: Sequelize.INTEGER,
         references: {
           model: 'Users'

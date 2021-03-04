@@ -14,7 +14,7 @@ module.exports = {
       },
       title: Sequelize.STRING,
       alt: Sequelize.STRING,
-      order: Sequelize.INTEGER,
+      order: Sequelize.INTEGER, //TODO не нуль, по-умолчанию 0.
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

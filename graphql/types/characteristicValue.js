@@ -5,7 +5,7 @@ module.exports = class CharacteristicValue {
         return {
             Mutation: {
                 addValueForCharacteristic: async (obj, args) => {
-                    await models.CharacteristicValue.createItem({
+                    await models.CharacteristicValue.createItem({//TODO задумайся о целях этой оптимизации: сократил ли ты кол-во строчек? Убра ли ты повторяющийся код? Упростил ли использование? Или чем эти методы лучше нативных?
                         item: {
                             characteristicId: args.characteristicId,
                             valueId: args.valueId,

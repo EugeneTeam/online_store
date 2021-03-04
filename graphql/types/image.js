@@ -21,7 +21,7 @@ module.exports = class Image {
                     });
                 }
             },
-            Mutation: {
+            Mutation: {//TODO не хватает загрузки картинки
                 createImage: async(obj, args) => {
                     return models.Image.createItem({
                         item: {

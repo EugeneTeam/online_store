@@ -19,7 +19,7 @@ describe('Category test', function() {
     it('getCategoryById should return "Category not found"', function(done) {
         request.post('/graphql')
             .send({ query: 'query {getCategoryById(categoryId: 9999) {id    name    createdAt    updatedAt}}'})
-            .expect(200)
+            .expect(200)//TODO может 404?
             .end((err, res) => {
                 if (err) {
                     return done(err);

@@ -40,7 +40,7 @@ module.exports = class User {
               role: user => user.getRole(),
             },
             Mutation: {
-                banUnbanUser: async (obj, args) => {
+                banUnbanUser: async (obj, args) => {//TODO toggleUserStatus
                     return models.User.updateItem({
                         options: args.userId,
                         updatedItem: {

@@ -11,5 +11,5 @@ const string = {
 
 
 module.exports = {
-    string
+    string//TODO лишняя переменная
 }
